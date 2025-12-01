@@ -9,20 +9,20 @@ import (
 // ProductRepository defines the interface for product data access
 type ProductRepository interface {
 	// Products
-	GetByID(ctx context.Context, id string) (*domain.ProductWithPrices, error)
-	GetBySlug(ctx context.Context, slug string) (*domain.ProductWithPrices, error)
-	List(ctx context.Context, params ListParams) (*PaginatedResult[domain.ProductWithPrices], error)
-	Search(ctx context.Context, query string, params ListParams) (*PaginatedResult[domain.ProductWithPrices], error)
+	GetByID(ctx context.Context, id string) (*domain.ProductWithOffers, error)
+	GetBySlug(ctx context.Context, slug string) (*domain.ProductWithOffers, error)
+	List(ctx context.Context, params ListParams) (*PaginatedResult[domain.ProductWithOffers], error)
+	Search(ctx context.Context, query string, params ListParams) (*PaginatedResult[domain.ProductWithOffers], error)
 	Create(ctx context.Context, req *domain.CreateProductRequest) (*domain.Product, error)
 	Update(ctx context.Context, id string, req *domain.UpdateProductRequest) (*domain.Product, error)
 	Delete(ctx context.Context, id string) error
 }
 
-// PriceRepository defines the interface for price data access
-type PriceRepository interface {
-	GetByProductID(ctx context.Context, productID string) ([]domain.Price, error)
-	GetHistory(ctx context.Context, productID string, retailerID *string) ([]PriceHistory, error)
-	Upsert(ctx context.Context, price *domain.Price) error
+// OfferRepository defines the interface for offer/price data access
+type OfferRepository interface {
+	GetByProductID(ctx context.Context, productID string) ([]domain.Offer, error)
+	GetHistory(ctx context.Context, productID string, retailerID *string) ([]domain.PriceHistory, error)
+	Upsert(ctx context.Context, offer *domain.Offer) error
 }
 
 // CategoryRepository defines the interface for category data access
@@ -59,13 +59,7 @@ type PaginatedResult[T any] struct {
 	TotalPages int  `json:"totalPages"`
 }
 
-// PriceHistory represents price history data
-type PriceHistory struct {
-	Timestamp string   `json:"timestamp"`
-	Price     float64  `json:"price"`
-	Shipping  *float64 `json:"shipping,omitempty"`
-	InStock   bool     `json:"inStock"`
-}
+// Note: PriceHistory type is defined in domain package
 
 // CategoryNode represents a category in a tree structure
 type CategoryNode struct {

@@ -1,0 +1,128 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  NODE_VERSION: '24'
+  PNPM_VERSION: '9.14.2'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm run version
+          publish: pnpm run release
+          title: 'chore(release): version packages'
+          commit: 'chore(release): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: tags } = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 1
+            });
+
+            if (tags.length === 0) {
+              console.log('No tags found');
+              return;
+            }
+
+            const latestTag = tags[0].name;
+            console.log(`Creating release for tag: ${latestTag}`);
+
+            // Get the previous tag for comparison
+            const { data: allTags } = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+
+            const previousTag = allTags.length > 1 ? allTags[1].name : null;
+
+            // Generate release notes
+            let body = `## What's Changed\n\n`;
+
+            if (previousTag) {
+              const { data: comparison } = await github.rest.repos.compareCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                base: previousTag,
+                head: latestTag
+              });
+
+              const commits = comparison.commits;
+              const features = [];
+              const fixes = [];
+              const others = [];
+
+              for (const commit of commits) {
+                const message = commit.commit.message.split('\n')[0];
+                if (message.startsWith('feat')) {
+                  features.push(`- ${message}`);
+                } else if (message.startsWith('fix')) {
+                  fixes.push(`- ${message}`);
+                } else if (!message.startsWith('chore(release)')) {
+                  others.push(`- ${message}`);
+                }
+              }
+
+              if (features.length > 0) {
+                body += `### Features\n${features.join('\n')}\n\n`;
+              }
+              if (fixes.length > 0) {
+                body += `### Bug Fixes\n${fixes.join('\n')}\n\n`;
+              }
+              if (others.length > 0) {
+                body += `### Other Changes\n${others.join('\n')}\n\n`;
+              }
+            }
+
+            body += `**Full Changelog**: https://github.com/${context.repo.owner}/${context.repo.repo}/compare/${previousTag || 'v0.0.0'}...${latestTag}`;
+
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: latestTag,
+              name: latestTag,
+              body: body,
+              draft: false,
+              prerelease: latestTag.includes('-')
+            });

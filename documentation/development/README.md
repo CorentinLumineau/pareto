@@ -375,6 +375,37 @@ test: add unit tests for normalizer
 chore: update dependencies
 ```
 
+Commit messages are validated by **commitlint** via lefthook.
+
+### Versioning & Releases
+
+We use **Changesets** for version management with **unified versioning** (all packages share the same version).
+
+```bash
+# After making changes, create a changeset
+make changeset
+# or: pnpm changeset
+
+# Check current versions
+make version-status
+
+# Check pending changesets
+make version-check
+```
+
+**Release Flow** (automated):
+1. Create changeset(s) describing your changes
+2. Commit and push to `main`
+3. CI creates a "Version Packages" PR
+4. Merge the PR → GitHub Release created automatically
+
+**Versioning Scheme** (Semver):
+| Change Type | Example | When to Use |
+|-------------|---------|-------------|
+| `patch` | 0.0.0 → 0.0.1 | Bug fixes |
+| `minor` | 0.0.1 → 0.1.0 | New features (non-breaking) |
+| `major` | 0.1.0 → 1.0.0 | Breaking changes |
+
 ### Pull Request Process
 
 1. Create feature branch from `main`

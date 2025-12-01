@@ -7,6 +7,7 @@
 #   make/docker.mk      - Docker: container management
 #   make/devcontainer.mk - Devcontainer: VS Code integration
 #   make/db.mk          - Database: Atlas migrations, schema management
+#   make/version.mk     - Versioning: changesets, releases
 
 # Include all modular makefiles
 include make/dev.mk
@@ -14,6 +15,7 @@ include make/quality.mk
 include make/docker.mk
 include make/devcontainer.mk
 include make/db.mk
+include make/version.mk
 
 # Default target
 .DEFAULT_GOAL := help
@@ -65,3 +67,9 @@ help:
 	@echo "    make migrate-up   Run database migrations (legacy)"
 	@echo "    make migrate-down Rollback migrations (legacy)"
 	@echo "    make seed         Seed database with test data"
+	@echo ""
+	@echo "  Versioning (make/version.mk):"
+	@echo "    make changeset       Create a changeset for your changes"
+	@echo "    make version         Apply changesets and bump versions"
+	@echo "    make version-status  Show current versions across packages"
+	@echo "    make version-check   Check for pending changesets"

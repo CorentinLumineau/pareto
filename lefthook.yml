@@ -49,12 +49,5 @@ pre-push:
 commit-msg:
   commands:
     # Validate commit message format (Conventional Commits)
-    conventional:
-      run: |
-        MSG=$(cat {1})
-        if ! echo "$MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+'; then
-          echo "Commit message must follow Conventional Commits format"
-          echo "Example: feat(api): add user authentication"
-          echo "Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
-          exit 1
-        fi
+    commitlint:
+      run: pnpm commitlint --edit {1}

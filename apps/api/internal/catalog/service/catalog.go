@@ -10,7 +10,7 @@ import (
 // CatalogService provides catalog business logic
 type CatalogService struct {
 	productRepo  repository.ProductRepository
-	priceRepo    repository.PriceRepository
+	offerRepo    repository.OfferRepository
 	categoryRepo repository.CategoryRepository
 	retailerRepo repository.RetailerRepository
 }
@@ -18,35 +18,35 @@ type CatalogService struct {
 // NewCatalogService creates a new catalog service
 func NewCatalogService(
 	productRepo repository.ProductRepository,
-	priceRepo repository.PriceRepository,
+	offerRepo repository.OfferRepository,
 	categoryRepo repository.CategoryRepository,
 	retailerRepo repository.RetailerRepository,
 ) *CatalogService {
 	return &CatalogService{
 		productRepo:  productRepo,
-		priceRepo:    priceRepo,
+		offerRepo:    offerRepo,
 		categoryRepo: categoryRepo,
 		retailerRepo: retailerRepo,
 	}
 }
 
-// GetProduct retrieves a product by ID with prices
-func (s *CatalogService) GetProduct(ctx context.Context, id string) (*domain.ProductWithPrices, error) {
+// GetProduct retrieves a product by ID with offers
+func (s *CatalogService) GetProduct(ctx context.Context, id string) (*domain.ProductWithOffers, error) {
 	return s.productRepo.GetByID(ctx, id)
 }
 
-// GetProductBySlug retrieves a product by slug with prices
-func (s *CatalogService) GetProductBySlug(ctx context.Context, slug string) (*domain.ProductWithPrices, error) {
+// GetProductBySlug retrieves a product by slug with offers
+func (s *CatalogService) GetProductBySlug(ctx context.Context, slug string) (*domain.ProductWithOffers, error) {
 	return s.productRepo.GetBySlug(ctx, slug)
 }
 
 // ListProducts retrieves a paginated list of products
-func (s *CatalogService) ListProducts(ctx context.Context, params repository.ListParams) (*repository.PaginatedResult[domain.ProductWithPrices], error) {
+func (s *CatalogService) ListProducts(ctx context.Context, params repository.ListParams) (*repository.PaginatedResult[domain.ProductWithOffers], error) {
 	return s.productRepo.List(ctx, params)
 }
 
 // SearchProducts searches for products by query
-func (s *CatalogService) SearchProducts(ctx context.Context, query string, params repository.ListParams) (*repository.PaginatedResult[domain.ProductWithPrices], error) {
+func (s *CatalogService) SearchProducts(ctx context.Context, query string, params repository.ListParams) (*repository.PaginatedResult[domain.ProductWithOffers], error) {
 	return s.productRepo.Search(ctx, query, params)
 }
 
@@ -65,14 +65,14 @@ func (s *CatalogService) DeleteProduct(ctx context.Context, id string) error {
 	return s.productRepo.Delete(ctx, id)
 }
 
-// GetPrices retrieves all prices for a product
-func (s *CatalogService) GetPrices(ctx context.Context, productID string) ([]domain.Price, error) {
-	return s.priceRepo.GetByProductID(ctx, productID)
+// GetOffers retrieves all offers for a product
+func (s *CatalogService) GetOffers(ctx context.Context, productID string) ([]domain.Offer, error) {
+	return s.offerRepo.GetByProductID(ctx, productID)
 }
 
 // GetPriceHistory retrieves price history for a product
-func (s *CatalogService) GetPriceHistory(ctx context.Context, productID string, retailerID *string) ([]repository.PriceHistory, error) {
-	return s.priceRepo.GetHistory(ctx, productID, retailerID)
+func (s *CatalogService) GetPriceHistory(ctx context.Context, productID string, retailerID *string) ([]domain.PriceHistory, error) {
+	return s.offerRepo.GetHistory(ctx, productID, retailerID)
 }
 
 // GetCategory retrieves a category by ID
