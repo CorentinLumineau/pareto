@@ -1,0 +1,104 @@
+# golangci-lint configuration for Pareto Comparator
+# Enforces type safety, code quality, and SOLID principles for Go code
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    # Default linters
+    - errcheck       # Check for unchecked errors
+    - gosimple       # Simplify code
+    - govet          # Report suspicious constructs
+    - ineffassign    # Detect ineffectual assignments
+    - staticcheck    # Static analysis
+    - unused         # Check for unused code
+
+    # Type safety
+    - typecheck      # Type checking
+    - unconvert      # Remove unnecessary type conversions
+
+    # Error handling
+    - nilerr         # Check nil error returns
+    - errorlint      # Error wrapping checks
+
+    # SOLID/Complexity (M4)
+    - gocyclo        # Cyclomatic complexity
+    - funlen         # Function length
+    - dupl           # Code duplication
+    - gocognit       # Cognitive complexity
+    - goconst        # Repeated strings
+    - cyclop         # More complexity checks
+    - maintidx       # Maintainability index
+
+    # Security (M5)
+    - gosec          # Security issues
+
+  disable:
+    - deadcode       # deprecated
+    - varcheck       # deprecated
+    - structcheck    # deprecated
+
+linters-settings:
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment  # Too strict for MVP
+
+  staticcheck:
+    checks: ["all"]
+
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  # SOLID/Complexity settings
+  gocyclo:
+    min-complexity: 10
+
+  funlen:
+    lines: 50
+    statements: 40
+
+  dupl:
+    threshold: 100  # tokens
+
+  gocognit:
+    min-complexity: 10
+
+  cyclop:
+    max-complexity: 10
+    package-average: 5.0
+    skip-tests: true
+
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+  maintidx:
+    under: 20  # Warn if maintainability index is below 20
+
+  # Security settings (M5)
+  gosec:
+    excludes:
+      - G104  # Audit errors not checked (covered by errcheck)
+    config:
+      global:
+        audit: enabled
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  exclude-rules:
+    # Exclude some linters from running on tests
+    - path: _test\.go
+      linters:
+        - errcheck
+        - dupl
+        - funlen
+        - gocyclo
+        - gocognit

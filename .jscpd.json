@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/jscpd.json",
+  "threshold": 3,
+  "reporters": ["console"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/.expo/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/__pycache__/**",
+    "**/vendor/**",
+    "**/.turbo/**",
+    "**/*.min.js",
+    "**/*.generated.*",
+    "**/pnpm-lock.yaml",
+    "**/go.sum"
+  ],
+  "format": ["typescript", "javascript", "python", "go"],
+  "minLines": 5,
+  "minTokens": 50,
+  "skipLocal": false,
+  "absolute": true,
+  "gitignore": true
+}

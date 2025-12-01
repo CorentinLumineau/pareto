@@ -1,0 +1,60 @@
+# Lefthook configuration for pre-commit hooks
+# Install: pnpm lefthook install
+
+pre-commit:
+  parallel: true
+  commands:
+    # TypeScript/JavaScript
+    lint-ts:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm eslint --fix {staged_files}
+      stage_fixed: true
+
+    typecheck-ts:
+      glob: "*.{ts,tsx}"
+      run: pnpm typecheck
+
+    # Python
+    lint-python:
+      glob: "*.py"
+      run: cd apps/workers && ruff check --fix {staged_files}
+      stage_fixed: true
+
+    format-python:
+      glob: "*.py"
+      run: cd apps/workers && ruff format {staged_files}
+      stage_fixed: true
+
+    typecheck-python:
+      glob: "*.py"
+      run: cd apps/workers && mypy {staged_files}
+
+    # Go
+    lint-go:
+      glob: "*.go"
+      run: cd apps/api && golangci-lint run --new-from-rev=HEAD~1
+
+    # Format checks
+    prettier:
+      glob: "*.{json,md,yaml,yml}"
+      run: pnpm prettier --check {staged_files}
+
+pre-push:
+  parallel: false
+  commands:
+    # Run full verification before push
+    verify:
+      run: make verify
+
+commit-msg:
+  commands:
+    # Validate commit message format (Conventional Commits)
+    conventional:
+      run: |
+        MSG=$(cat {1})
+        if ! echo "$MSG" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+'; then
+          echo "Commit message must follow Conventional Commits format"
+          echo "Example: feat(api): add user authentication"
+          echo "Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+          exit 1
+        fi
