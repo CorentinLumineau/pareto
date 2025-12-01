@@ -8,6 +8,7 @@
 |------|---------|
 | [README.md](./README.md) | Architecture overview |
 | [data-flow.md](./data-flow.md) | Complete scraping → UI data pipeline |
+| [scraping-strategy.md](./scraping-strategy.md) | Brand-first scraping approach |
 | [scaling/](./scaling/) | Scaling strategy and architecture |
 
 ## Architecture Pattern

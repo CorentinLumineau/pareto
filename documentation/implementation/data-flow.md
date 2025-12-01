@@ -4,71 +4,70 @@
 
 ## Overview
 
-This document traces the complete journey of product data from retailer websites to user screens, ensuring:
-1. **All hardware characteristics are captured** (JSONB flexibility)
-2. **No reprocessing of known products** (entity resolution)
-3. **Real-time price updates** without re-scraping attributes
+This document traces the complete journey of product data from brand websites to user screens, ensuring:
+1. **All hardware characteristics are captured** from official brand sources
+2. **No reprocessing of known products** (EAN-based matching)
+3. **Real-time price updates** from marketplaces without re-scraping specs
+
+**Strategy**: See [scraping-strategy.md](./scraping-strategy.md) for the **Brand-First Approach**:
+- **Primary**: Brand websites (Apple, Samsung, etc.) for complete specs
+- **Secondary**: Marketplaces (Amazon, Fnac, etc.) for real prices
 
 ## Data Flow Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           COMPLETE DATA FLOW                                │
+│                    BRAND-FIRST COMPLETE DATA FLOW                           │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-  RETAILER WEBSITES                    PARETO SYSTEM                    USER
-  ─────────────────                    ─────────────                    ────
+  BRAND WEBSITES (Primary)             PARETO SYSTEM                    USER
+  ────────────────────────             ─────────────                    ────
 
   ┌──────────────┐     ┌─────────────────────────────────────────────────┐
-  │  Amazon.fr   │────▶│  1. SCRAPER (Go + Python curl_cffi)            │
-  │  Fnac        │     │     • Anti-bot bypass (TLS fingerprinting)     │
-  │  Darty       │     │     • Raw HTML capture                         │
-  │  Boulanger   │     │     • Store in Redis (24hr debug TTL)          │
-  │  Cdiscount   │     └─────────────────────────────────────────────────┘
-  └──────────────┘                          │
+  │  apple.com   │────▶│  1. BRAND SCRAPER (Weekly)                     │
+  │  samsung.com │     │     • Official specifications                  │
+  │  xiaomi.com  │     │     • Complete attribute list                  │
+  │  google.com  │     │     • All variants (color, storage)            │
+  │  oneplus.com │     │     • EAN/GTIN codes                           │
+  └──────────────┘     └─────────────────────────────────────────────────┘
+                                            │
                                             ▼
                        ┌─────────────────────────────────────────────────┐
-                       │  2. NORMALIZER (Python BeautifulSoup)          │
-                       │     • Extract ALL attributes                    │
-                       │     • Retailer-specific parsers                 │
+                       │  2. PRODUCT NORMALIZER (Python)                │
+                       │     • Extract ALL attributes (40+ fields)       │
+                       │     • Brand-specific parsers (JSON-LD, HTML)    │
                        │     • Validate with Pydantic schemas            │
                        └─────────────────────────────────────────────────┘
                                             │
                                             ▼
                        ┌─────────────────────────────────────────────────┐
-                       │  3. ENTITY RESOLVER (Go)                       │
-                       │     • GTIN match (EAN-13) → 100% confidence    │
-                       │     • SKU lookup → 100% confidence             │
-                       │     • Fuzzy title → 85-95% confidence          │
-                       │                                                 │
-                       │  ┌─────────────────────────────────────────┐   │
-                       │  │ KNOWN PRODUCT?                          │   │
-                       │  │   YES → Update PRICE only (offers)      │   │
-                       │  │   NO  → Create product + price          │   │
-                       │  └─────────────────────────────────────────┘   │
+                       │  3. STORAGE (PostgreSQL)                      │
+                       │     • Products with COMPLETE specs              │
+                       │     • EAN as unique identifier                  │
+                       │     • JSONB attributes (40+ fields)             │
+                       └─────────────────────────────────────────────────┘
+                                            │
+                                            │ EAN-based lookup
+                                            ▼
+  MARKETPLACES (Secondary)   ┌─────────────────────────────────────────────────┐
+  ────────────────────────   │  4. PRICE SCRAPER (Every 4 hours)            │
+  ┌──────────────┐           │     • Search by EAN (simple, reliable)        │
+  │  Amazon.fr   │──────────▶│     • Extract ONLY: price, stock, URL         │
+  │  Fnac        │           │     • No spec extraction needed               │
+  │  Darty       │           │     • Anti-bot bypass for prices only         │
+  │  Boulanger   │           └─────────────────────────────────────────────────┘
+  │  Cdiscount   │                              │
+  └──────────────┘                              ▼
+                       ┌─────────────────────────────────────────────────┐
+                       │  5. OFFER MATCHER (Go)                         │
+                       │     • Match price to known product (by EAN)     │
+                       │     • UPSERT offers table                       │
+                       │     • INSERT price_history (TimescaleDB)        │
                        └─────────────────────────────────────────────────┘
                                             │
                                             ▼
                        ┌─────────────────────────────────────────────────┐
-                       │  4. STORAGE (PostgreSQL + TimescaleDB)         │
-                       │                                                 │
-                       │  products (created ONCE, attributes immutable) │
-                       │  ├─ id, name, brand, ean                       │
-                       │  ├─ attributes JSONB ← ALL characteristics     │
-                       │  └─ category_id                                │
-                       │                                                 │
-                       │  offers (updated on EVERY scrape)              │
-                       │  ├─ product_id, retailer_id                    │
-                       │  ├─ price, currency, condition                 │
-                       │  └─ scraped_at                                 │
-                       │                                                 │
-                       │  price_history (TimescaleDB hypertable)        │
-                       │  └─ Compressed after 7 days, 2-year retention  │
-                       └─────────────────────────────────────────────────┘
-                                            │
-                                            ▼
-                       ┌─────────────────────────────────────────────────┐
-                       │  5. COMPARISON ENGINE (Python paretoset)       │
+                       │  6. COMPARISON ENGINE (Python paretoset)       │
                        │     • Fetch products + current prices          │
                        │     • Calculate Pareto frontier                │
                        │     • Z-score normalization                    │
@@ -77,7 +76,7 @@ This document traces the complete journey of product data from retailer websites
                                             │
                                             ▼
                        ┌─────────────────────────────────────────────────┐
-                       │  6. API LAYER (Go Chi router)                  │  ┌──────────┐
+                       │  7. API LAYER (Go Chi router)                  │  ┌──────────┐
                        │     • REST endpoints                           │──▶│  Web UI  │
                        │     • Response caching                         │  │ (Next.js)│
                        │     • Affiliate link injection                 │  └──────────┘
@@ -89,29 +88,46 @@ This document traces the complete journey of product data from retailer websites
                                                                            └──────────┘
 ```
 
-## Stage 1: Scraping
+## Stage 1: Brand Scraping (Primary - Weekly)
 
-### What Gets Scraped
+### What Gets Scraped from Brand Websites
 
 ```python
-# Every retailer page captures:
-class ScrapeResult:
-    url: str              # Product page URL
-    html: bytes           # FULL raw HTML (for re-parsing if needed)
-    status_code: int      # HTTP status
-    retailer_id: str      # amazon_fr, fnac, etc.
-    scraped_at: datetime  # Timestamp
+# Brand websites provide complete product data:
+@dataclass
+class BrandProduct:
+    name: str             # "iPhone 16 Pro"
+    brand: str            # "Apple"
+    model: str            # "iPhone 16 Pro"
+    ean: str | None       # "0194253715214"
+    sku: str              # Brand's internal SKU
+    image_url: str        # High-quality official image
+    attributes: dict      # 40+ official specs
+    variants: list        # All color/storage combinations
+    msrp: float | None    # Official price (reference only)
 ```
 
-### Anti-Bot Strategy
+### Brand Websites (Easy to Scrape)
 
-| Retailer | Protection | Our Bypass |
-|----------|------------|------------|
-| Amazon.fr | DataDome | curl_cffi Chrome 136 + Residential proxy |
-| Fnac | DataDome | curl_cffi Chrome 136 + Residential proxy |
-| Cdiscount | Cloudflare | Rotating fingerprints + Residential proxy |
-| Darty | Cloudflare | Chrome 120 + Datacenter proxy OK |
-| Boulanger | Cloudflare | Chrome 120 + Datacenter proxy OK |
+| Brand | Website | Anti-Bot | Data Format |
+|-------|---------|----------|-------------|
+| Apple | apple.com/fr | None | JSON-LD |
+| Samsung | samsung.com/fr | Minimal | JSON-LD |
+| Xiaomi | mi.com/fr | None | HTML |
+| Google | store.google.com | None | JSON-LD |
+| OnePlus | oneplus.com | None | JSON-LD |
+
+## Stage 2: Price Scraping (Secondary - Every 4h)
+
+### Marketplaces (Price Only)
+
+| Retailer | Protection | Strategy |
+|----------|------------|----------|
+| Amazon.fr | DataDome | Search by EAN, extract price only |
+| Fnac | DataDome | Search by EAN, extract price only |
+| Cdiscount | Cloudflare | Search by EAN, extract price only |
+| Darty | Cloudflare | Search by EAN, extract price only |
+| Boulanger | Cloudflare | Search by EAN, extract price only |
 
 ### Scraping Schedule
 
