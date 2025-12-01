@@ -7,44 +7,56 @@
 | File | Purpose |
 |------|---------|
 | [README.md](./README.md) | Architecture overview |
-| [modules/](./modules/) | Detailed module specs |
-| [adrs/](./adrs/) | Architecture decisions |
-| [api/](./api/) | API specifications |
-| [database/](./database/) | Schema documentation |
 
 ## Architecture Pattern
 
-**Modular Monolith** - 3 services:
-1. Go Monolith (API + orchestration)
+**Modular Monolith** - 4 services:
+1. Go API (REST + orchestration)
 2. Python Workers (parsing + Pareto)
 3. Next.js Frontend (SSR + UI)
+4. Expo Mobile (iOS + Android)
 
 ## Module Map
 
 ```
-Go Monolith           Python Workers        Frontend
------------           --------------        --------
-internal/catalog/     src/normalizer/       app/
-internal/scraper/     src/pareto/           components/
-internal/compare/     src/fetcher/          lib/
+Go API (apps/api/)         Python Workers (apps/workers/)
+------------------         ----------------------------
+internal/catalog/          src/normalizer/
+internal/scraper/          src/pareto/
+internal/compare/          src/fetcher/
 internal/affiliate/
+internal/shared/
+
+Frontend (apps/web/)       Mobile (apps/mobile/)
+--------------------       ---------------------
+app/                       app/
+components/                components/
+lib/                       lib/
+
+Shared Packages (packages/)
+---------------------------
+@pareto/api-client
+@pareto/types
+@pareto/utils
 ```
 
-## Key Technologies
+## Key Technologies (December 2025)
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| API | Go + Chi | 1.23.4 |
-| Workers | Python + Celery | 3.13.1 |
-| Frontend | Next.js | 15.1.0 |
-| Database | PostgreSQL + TimescaleDB | 17.2 |
-| Cache | Redis | 7.4.1 |
+| API | Go + Chi | 1.24.10 |
+| Workers | Python + Celery | 3.14.0 |
+| Frontend | Next.js | 16.0.3 |
+| Mobile | Expo SDK | 53 |
+| Database | PostgreSQL + TimescaleDB | 18.1 |
+| Cache | Redis | 8.4.0 |
 
 ## Related Sections
 
 - [Domain](../domain/) - Business rules
 - [Development](../development/) - Setup guide
 - [Milestones](../milestones/) - Roadmap
+- [Stack Reference](../reference/stack/) - Technology documentation
 
 ## Original Specifications
 

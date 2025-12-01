@@ -18,71 +18,105 @@
 
 ```bash
 # 1. Read the strategic blueprint
-cat blueprint.md
+cat documentation/reference/specs/blueprint.md
 
 # 2. Understand the architecture
-cat architecture.md
+cat documentation/reference/specs/architecture.md
 
 # 3. Follow the development setup
 cat documentation/development/README.md
 
-# 4. Start the MVP initiative
-cat documentation/milestones/initiatives/001-mvp-launch/README.md
+# 4. Check the roadmap
+cat documentation/milestones/MASTERPLAN.md
 ```
 
 ## Documentation Structure
 
 ```
 pareto/
-├── CLAUDE.md                  # This file - project entry point
-├── blueprint.md               # Strategic vision, market analysis
-├── architecture.md            # Technical architecture (modular monolith)
-├── scrapper-module.md         # Scraping specification
-├── normalizer-catalog.md      # Data processing pipeline
-├── comparaison-catalog.md     # Pareto engine + affiliate
-├── frontend.md                # Next.js frontend spec
-├── infrastructure.md          # DevOps specification
-└── documentation/             # Structured documentation
-    ├── config.yaml            # Stack configuration (VALIDATED)
-    ├── CLAUDE.md              # Documentation hub
-    ├── domain/                # Business logic
-    ├── development/           # Setup guides
-    ├── implementation/        # Technical specs
-    ├── milestones/            # Roadmap & initiatives
-    └── reference/             # Stack docs
+├── CLAUDE.md                           # This file - project entry point
+└── documentation/
+    ├── CLAUDE.md                       # Documentation hub
+    ├── config.yaml                     # Stack configuration
+    ├── domain/                         # Business logic
+    │   ├── README.md                   # Domain overview
+    │   └── pareto-optimization.md      # Pareto algorithm explained
+    ├── development/                    # Setup guides
+    │   └── README.md                   # Local development setup
+    ├── implementation/                 # Technical specs
+    │   └── README.md                   # Architecture details
+    ├── milestones/                     # Roadmap & initiatives
+    │   ├── MASTERPLAN.md               # Overall roadmap
+    │   ├── foundation/                 # Infrastructure setup
+    │   ├── scraper/                    # Web scraping module
+    │   ├── normalizer/                 # Data normalization
+    │   ├── catalog/                    # Product catalog
+    │   ├── comparison/                 # Pareto engine
+    │   ├── affiliate/                  # Revenue tracking
+    │   ├── frontend/                   # Web application
+    │   ├── mobile/                     # Mobile app
+    │   └── launch/                     # Go-live checklist
+    └── reference/                      # Stack docs & specs
+        ├── specs/                      # Original specifications
+        │   ├── blueprint.md            # Strategic vision
+        │   ├── architecture.md         # Technical architecture
+        │   ├── scrapper-module.md      # Scraping specification
+        │   ├── normalizer-catalog.md   # Data processing
+        │   ├── comparaison-catalog.md  # Pareto + affiliate
+        │   ├── frontend.md             # Frontend specification
+        │   └── infrastructure.md       # DevOps specification
+        └── stack/                      # Technology documentation
+            ├── README.md               # Stack overview
+            ├── go.md                   # Go 1.24 + Chi router
+            ├── python.md               # Python 3.14 + Celery
+            ├── nextjs.md               # Next.js 16
+            ├── react.md                # React 19.2
+            ├── tailwind.md             # Tailwind CSS v4
+            ├── expo.md                 # Expo SDK 53
+            ├── react-native.md         # React Native 0.79
+            ├── postgresql.md           # PostgreSQL 18
+            ├── redis.md                # Redis 8.4
+            ├── docker.md               # Docker 29
+            └── cloudflare.md           # Cloudflare Tunnel
 ```
 
-## Validated Technology Stack (Dec 2025)
+## Technology Stack (December 2025)
 
 ### Backend
+
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Go** | 1.23.4 | Modular Monolith API |
-| **Gin** | 1.10.0 | HTTP router |
-| **GORM** | 1.25+ | ORM for PostgreSQL |
-| **Python** | 3.13.1 | Workers |
-| **Celery** | 5.4+ | Task queue |
+| **Go** | 1.24.10 | API server (Chi router) |
+| **Python** | 3.14.0 | Workers (Celery, curl_cffi, paretoset) |
+| **PostgreSQL** | 18.1 | Primary database + TimescaleDB |
+| **Redis** | 8.4.0 | Cache + message queue |
 
 ### Frontend
+
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Next.js** | 15.1.0 | SSR/RSC App Router |
-| **React** | 19.0.0 | UI library |
-| **Tailwind CSS** | 4.0.0 | Styling |
-| **TanStack Query** | 5.62+ | Data fetching |
-| **TanStack Table** | 8.20+ | Product tables |
-| **TanStack Form** | 0.34+ | Forms |
+| **Next.js** | 16.0.3 | SSR/RSC with Turbopack |
+| **React** | 19.2.0 | UI library |
+| **Tailwind CSS** | 4.1.17 | Styling |
+| **TanStack Query** | 5.84+ | Data fetching |
 | **shadcn/ui** | latest | UI components |
 | **Recharts** | 2.14+ | Pareto visualization |
-| **Zod** | 3.24+ | Validation |
 
-### Infrastructure
+### Mobile
+
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **PostgreSQL** | 17.2 | Primary database |
-| **TimescaleDB** | 2.17 | Price history |
-| **Redis** | 7.4.1 | Cache + Celery broker |
-| **Dokploy** | latest | Self-hosted deployment |
+| **Expo SDK** | 53 | Cross-platform framework |
+| **React Native** | 0.79.0 | Mobile runtime |
+| **NativeWind** | 4.x | Tailwind for mobile |
+
+### Infrastructure
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Docker** | 29.1.1 | Containerization |
+| **Cloudflare** | - | CDN + Tunnel |
+| **Dokploy** | latest | Self-hosted PaaS |
 | **Hetzner** | CPX21 | VPS (~8EUR/month) |
 
 ## Architecture
@@ -96,12 +130,14 @@ pareto/
                        |
         +------+-------+-------+
         |      |               |
-   [Next.js] [Go/Gin]    [Python/Celery]
-   TanStack   GORM         curl_cffi
+   [Next.js] [Go API]    [Python Workers]
+   React 19   Chi          curl_cffi
+   Tailwind   pgx          paretoset
         |      |               |
         +------+-------+-------+
                        |
               [PostgreSQL + Redis]
+               TimescaleDB
 ```
 
 **Pattern**: Modular Monolith (YAGNI-first)
@@ -130,13 +166,14 @@ A product is **Pareto-optimal** if no other product beats it on ALL criteria. Us
 
 | Task | Read |
 |------|------|
-| Understand the vision | `blueprint.md` |
-| Understand architecture | `architecture.md` |
+| Understand the vision | `documentation/reference/specs/blueprint.md` |
+| Understand architecture | `documentation/reference/specs/architecture.md` |
 | Stack configuration | `documentation/config.yaml` |
 | Setup development env | `documentation/development/README.md` |
-| Start building | `documentation/milestones/initiatives/001-mvp-launch/README.md` |
+| View roadmap | `documentation/milestones/MASTERPLAN.md` |
 | Domain rules | `documentation/domain/README.md` |
 | Technical specs | `documentation/implementation/README.md` |
+| Stack reference | `documentation/reference/stack/README.md` |
 
 ## Commands
 
@@ -163,4 +200,4 @@ make deploy        # Deploy to production
 
 ---
 
-**Status**: Pre-MVP | **Owner**: @clumineau | **Updated**: 2025-12-01 | **Stack**: Validated
+**Status**: Pre-MVP | **Owner**: @clumineau | **Updated**: 2025-12-01 | **Stack**: December 2025

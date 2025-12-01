@@ -221,4 +221,4 @@ Pareto calculations are computationally intensive. We cache results:
 
 **See Also**:
 - [Comparison Engine Spec](../reference/specs/comparaison-catalog.md)
-- [Implementation](../implementation/modules/compare.md)
+- [Implementation](../implementation/README.md)

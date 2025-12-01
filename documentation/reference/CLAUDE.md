@@ -6,11 +6,36 @@
 
 | File | Purpose |
 |------|---------|
-| [README.md](./README.md) | Stack overview |
-| [api/](./api/) | OpenAPI specs |
-| [database/](./database/) | Schema docs |
+| [README.md](./README.md) | Stack overview and versions |
 | [specs/](./specs/) | Original specification documents |
-| [glossary.md](./glossary.md) | Terms |
+| [stack/](./stack/) | Technology documentation |
+
+## Stack Documentation
+
+Complete technology guides in `stack/`:
+- [README.md](./stack/README.md) - Stack overview
+- [go.md](./stack/go.md) - Go 1.24 + Chi router
+- [python.md](./stack/python.md) - Python 3.14 + Celery
+- [nextjs.md](./stack/nextjs.md) - Next.js 16
+- [react.md](./stack/react.md) - React 19.2
+- [tailwind.md](./stack/tailwind.md) - Tailwind CSS v4
+- [expo.md](./stack/expo.md) - Expo SDK 53
+- [react-native.md](./stack/react-native.md) - React Native 0.79
+- [postgresql.md](./stack/postgresql.md) - PostgreSQL 18 + TimescaleDB
+- [redis.md](./stack/redis.md) - Redis 8.4
+- [docker.md](./stack/docker.md) - Docker 29
+- [cloudflare.md](./stack/cloudflare.md) - Cloudflare Tunnel + CDN
+
+## Original Specifications
+
+Located in `specs/`:
+- [blueprint.md](./specs/blueprint.md) - Strategic vision, market analysis
+- [architecture.md](./specs/architecture.md) - Technical architecture
+- [scrapper-module.md](./specs/scrapper-module.md) - Scraping module
+- [normalizer-catalog.md](./specs/normalizer-catalog.md) - Data processing
+- [comparaison-catalog.md](./specs/comparaison-catalog.md) - Pareto engine
+- [frontend.md](./specs/frontend.md) - Frontend specification
+- [infrastructure.md](./specs/infrastructure.md) - DevOps specification
 
 ## Context7 Libraries
 
@@ -26,14 +51,12 @@ TanStack Query: /tanstack/query/v5_84_1           # 864 snippets, 89 score
 
 # Mobile (verified Dec 2025)
 Expo SDK 53:    /expo/expo                        # 3805 snippets, 91.4 score
-Expo SDK 54:    /websites/expo_dev_versions_v54_0_0  # 1991 snippets
 NativeWind:     /websites/nativewind_dev          # 129 snippets
 React Native:   /websites/reactnative_dev         # 7736 snippets
 
 # Backend (verified Dec 2025)
 Go 1.24:        /golang/go/go1_24_6               # 4226 snippets, High rep
 Go Effective:   /websites/go_dev_doc              # 1239 snippets, 84.8 score
-Go Stdlib:      /websites/pkg_go_dev_std_go1_25_3 # 3341 snippets, 82.8 score
 ```
 
 ## Quick Links

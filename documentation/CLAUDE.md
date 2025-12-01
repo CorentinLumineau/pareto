@@ -7,17 +7,18 @@
 | Section | Purpose | Key Files |
 |---------|---------|-----------|
 | [Domain](./domain/) | Business logic, Pareto algorithms, comparison rules | [Overview](./domain/README.md), [Pareto Logic](./domain/pareto-optimization.md) |
-| [Development](./development/) | Setup, workflows, contribution | [Getting Started](./development/README.md), [Local Setup](./development/local-setup.md) |
-| [Implementation](./implementation/) | Technical specs, ADRs, modules | [Architecture](./implementation/README.md), [Modules](./implementation/modules/) |
-| [Milestones](./milestones/) | Roadmap, initiatives, phases | [MASTERPLAN](./milestones/MASTERPLAN.md), [All Initiatives](./milestones/) |
-| [Reference](./reference/) | Stack docs, API specs | [Stack Reference](./reference/README.md) |
+| [Development](./development/) | Setup, workflows, contribution | [Getting Started](./development/README.md) |
+| [Implementation](./implementation/) | Technical specs, architecture | [Architecture](./implementation/README.md) |
+| [Milestones](./milestones/) | Roadmap, initiatives, phases | [MASTERPLAN](./milestones/MASTERPLAN.md) |
+| [Reference](./reference/) | Stack docs, API specs, original specs | [Stack](./reference/stack/README.md), [Specs](./reference/specs/) |
 
 ## Project Status
 
 ```
 Phase: PRE-MVP
 Status: Planning & Setup
-Target: MVP Launch (Hardware Vertical - France)
+Target: MVP Launch (Smartphones - France)
+Stack: December 2025 (Go 1.24, Python 3.14, Next.js 16, Expo 53)
 ```
 
 ## Architecture Overview
@@ -32,23 +33,27 @@ Target: MVP Launch (Hardware Vertical - France)
         +------+-------+-------+
         |      |               |
    [Next.js] [Go API]    [Python Workers]
+   React 19   Chi          curl_cffi
+   Tailwind   pgx          paretoset
         |      |               |
         +------+-------+-------+
                        |
               [PostgreSQL + Redis]
+               TimescaleDB   8.4
 ```
 
 ## Module Map
 
 | Module | Language | Responsibility |
 |--------|----------|----------------|
-| `internal/catalog/` | Go | Products, prices, categories |
-| `internal/scraper/` | Go | Job orchestration, proxies |
-| `internal/compare/` | Go | Pareto API (delegates to Python) |
-| `internal/affiliate/` | Go | Link generation, click tracking |
-| `workers/src/normalizer/` | Python | HTML parsing, data extraction |
-| `workers/src/pareto/` | Python | Pareto calculation, z-scores |
-| `frontend/` | Next.js | SSR pages, comparison UI |
+| `apps/api/internal/catalog/` | Go | Products, prices, categories |
+| `apps/api/internal/scraper/` | Go | Job orchestration, proxies |
+| `apps/api/internal/compare/` | Go | Pareto API (delegates to Python) |
+| `apps/api/internal/affiliate/` | Go | Link generation, click tracking |
+| `apps/workers/src/normalizer/` | Python | HTML parsing, data extraction |
+| `apps/workers/src/pareto/` | Python | Pareto calculation, z-scores |
+| `apps/web/` | Next.js | SSR pages, comparison UI |
+| `apps/mobile/` | Expo | iOS/Android app |
 
 ## Key Principles
 
@@ -67,10 +72,13 @@ cat reference/specs/blueprint.md
 cat reference/specs/architecture.md
 
 # 3. Start with development setup
-cat development/local-setup.md
+cat development/README.md
 
 # 4. Follow the MVP roadmap
 cat milestones/MASTERPLAN.md
+
+# 5. Check stack documentation
+cat reference/stack/README.md
 ```
 
 ## Original Specifications
@@ -83,6 +91,20 @@ The project started with detailed specification documents (now in `reference/spe
 - [comparaison-catalog.md](./reference/specs/comparaison-catalog.md) - Pareto and affiliate logic
 - [frontend.md](./reference/specs/frontend.md) - Frontend specification
 - [infrastructure.md](./reference/specs/infrastructure.md) - DevOps and deployment
+
+## Stack Documentation
+
+Complete technology guides in `reference/stack/`:
+- [Go 1.24](./reference/stack/go.md) - Chi router, pgx, go-redis
+- [Python 3.14](./reference/stack/python.md) - Celery, curl_cffi, paretoset
+- [Next.js 16](./reference/stack/nextjs.md) - Turbopack, PPR, Server Components
+- [React 19.2](./reference/stack/react.md) - Actions, useOptimistic
+- [Tailwind v4](./reference/stack/tailwind.md) - CSS-first configuration
+- [Expo SDK 53](./reference/stack/expo.md) - Expo Router, NativeWind
+- [PostgreSQL 18](./reference/stack/postgresql.md) - TimescaleDB, UUIDv7
+- [Redis 8.4](./reference/stack/redis.md) - JSON, RediSearch, Pub/Sub
+- [Docker 29](./reference/stack/docker.md) - Compose, multi-stage builds
+- [Cloudflare](./reference/stack/cloudflare.md) - Tunnel, CDN, WAF
 
 ---
 
