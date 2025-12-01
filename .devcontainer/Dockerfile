@@ -105,6 +105,13 @@ RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmo
     && rm -rf /var/lib/apt/lists/*
 
 # ============================================
+# Atlas - Database Schema Management
+# ============================================
+RUN curl -sSf https://atlasgo.sh | sh -s -- -y \
+    && mv /root/.atlas/bin/atlas /usr/local/bin/atlas \
+    && chmod +x /usr/local/bin/atlas
+
+# ============================================
 # User Configuration
 # ============================================
 USER vscode
