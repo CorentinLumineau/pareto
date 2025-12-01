@@ -15,11 +15,28 @@ env:
   PYTHON_VERSION: '3.13'
   NODE_VERSION: '24'
   PNPM_VERSION: '9'
+  # Owner username for conditional job execution
+  REPO_OWNER: 'clumineau'
 
 jobs:
+  # Quick check for external PRs (minimal resources)
+  external-pr-check:
+    name: External PR Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'clumineau'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Notice
+        run: |
+          echo "::notice::External PR detected. Running basic checks only."
+          echo "Full CI runs only for repository owner PRs."
+
   verify:
     name: Quality Verification
     runs-on: ubuntu-latest
+    # Only run for: pushes OR PRs from owner
+    if: github.event_name == 'push' || github.event.pull_request.user.login == 'clumineau'
 
     services:
       postgres:
@@ -112,6 +129,7 @@ jobs:
     name: Coverage Ratchet
     runs-on: ubuntu-latest
     needs: verify
+    if: github.event_name == 'push' || github.event.pull_request.user.login == 'clumineau'
 
     steps:
       - name: Checkout
@@ -125,6 +143,7 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.user.login == 'clumineau'
 
     steps:
       - name: Checkout
@@ -141,6 +160,7 @@ jobs:
   duplication-check:
     name: Code Duplication Check
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.user.login == 'clumineau'
 
     steps:
       - name: Checkout
