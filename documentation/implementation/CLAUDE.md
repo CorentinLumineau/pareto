@@ -7,6 +7,7 @@
 | File | Purpose |
 |------|---------|
 | [README.md](./README.md) | Architecture overview |
+| [data-flow.md](./data-flow.md) | Complete scraping → UI data pipeline |
 | [scaling/](./scaling/) | Scaling strategy and architecture |
 
 ## Architecture Pattern
