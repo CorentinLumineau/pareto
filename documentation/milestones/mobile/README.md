@@ -1,13 +1,13 @@
 # Mobile Initiative
 
-> **Expo app for iOS and Android with shared packages**
+> **Expo SDK 53 app for iOS and Android with shared packages**
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                           MOBILE INITIATIVE                                   ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Status:     ⏳ PENDING                                                       ║
-║  Effort:     4 weeks (20 days)                                               ║
+║  Status:     ⏳ PENDING (10% pre-done)                                       ║
+║  Effort:     3 weeks (15 days)                                               ║
 ║  Depends:    Catalog, Comparison, Affiliate                                  ║
 ║  Parallel:   Frontend Web                                                    ║
 ║  Unlocks:    Launch                                                          ║
@@ -17,6 +17,8 @@
 ## Objective
 
 Build native iOS and Android apps using Expo, sharing code with the web frontend through monorepo packages.
+
+**Already done**: Landing page exists in `apps/mobile/` with Expo SDK 53 + Expo Router v4.
 
 ## Architecture
 
@@ -47,22 +49,32 @@ Build native iOS and Android apps using Expo, sharing code with the web frontend
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| Framework | Expo SDK 52 | Cross-platform |
+| Framework | Expo SDK 53 | Cross-platform |
 | Navigation | Expo Router v4 | File-based routing |
-| Language | TypeScript | Type safety |
-| Data | TanStack Query | Server state |
-| Styling | NativeWind | Tailwind for RN |
+| Language | TypeScript 5.7 | Type safety |
+| Data | TanStack Query v5 | Server state |
+| Styling | NativeWind v4 | Tailwind for RN |
 | Charts | Victory Native | Data visualization |
 
-## Phases
+## Milestones
 
-| # | Phase | Effort | Description |
-|---|-------|--------|-------------|
-| 01 | [Project Setup](./01-setup.md) | 2d | Expo, NativeWind, shared packages |
-| 02 | [Core Screens](./02-core-screens.md) | 5d | Home, list, detail |
-| 03 | [Comparison UI](./03-comparison.md) | 5d | Pareto visualization |
-| 04 | [Native Features](./04-native.md) | 4d | Notifications, deep links |
-| 05 | [Store Submission](./05-store.md) | 4d | App Store, Play Store |
+| # | Phase | Effort | Status | Description |
+|---|-------|--------|--------|-------------|
+| M1 | [Project Setup](./01-setup.md) | 2d | ✅ Done | Expo, NativeWind, shared packages |
+| M2 | [Core Screens](./02-core-screens.md) | 5d | ⏳ Pending | Home, list, detail |
+| M3 | [Comparison UI](./03-comparison.md) | 4d | ⏳ Pending | Pareto visualization |
+| M4 | [Native Features](./04-native.md) | 2d | ⏳ Pending | Notifications, deep links |
+| M5 | [Store Submission](./05-store.md) | 2d | ⏳ Pending | App Store, Play Store |
+
+## Progress: 10%
+
+```
+M1 Project Setup   [██████████] 100% ✅
+M2 Core Screens    [░░░░░░░░░░]   0%
+M3 Comparison UI   [░░░░░░░░░░]   0%
+M4 Native Features [░░░░░░░░░░]   0%
+M5 Store Submit    [░░░░░░░░░░]   0%
+```
 
 ## App Structure
 

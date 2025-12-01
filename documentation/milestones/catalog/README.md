@@ -1,12 +1,12 @@
 # Catalog Initiative
 
-> **Product database, price history, and catalog API**
+> **Product database with JSONB attributes, price history, and EAN-based matching**
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                           CATALOG INITIATIVE                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Status:     ⏳ PENDING                                                       ║
+║  Status:     ⏳ PENDING (5% pre-done)                                        ║
 ║  Effort:     2 weeks (10 days)                                               ║
 ║  Depends:    Normalizer                                                      ║
 ║  Unlocks:    Comparison, Affiliate, Frontend                                 ║
@@ -15,7 +15,11 @@
 
 ## Objective
 
-Build the central product catalog with PostgreSQL storage, price history tracking, and REST API endpoints for all consumers.
+Build the central product catalog with:
+- **Products**: From brand websites with 40+ attributes in JSONB
+- **Offers**: Marketplace prices linked via EAN
+- **Price History**: TimescaleDB hypertables for time-series data
+- **REST API**: Internal (for workers) + Public (for frontend)
 
 ## Architecture
 
@@ -47,11 +51,11 @@ Build the central product catalog with PostgreSQL storage, price history trackin
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| Database | PostgreSQL 17 | Product storage |
-| Time-series | TimescaleDB | Price history |
-| Cache | Redis 7.4 | Query caching |
-| API | Go + Gin | REST endpoints |
-| ORM | GORM | Database access |
+| Database | PostgreSQL 18.1 | Product storage |
+| Time-series | TimescaleDB 2.23 | Price history |
+| Cache | Redis 8.4 | Query caching |
+| API | Go + Chi | REST endpoints |
+| Database | pgx | Direct SQL (no ORM) |
 
 ## Phases
 

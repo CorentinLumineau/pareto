@@ -6,8 +6,8 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                          COMPARISON INITIATIVE                                ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Status:     ⏳ PENDING                                                       ║
-║  Effort:     1.5 weeks (7 days)                                              ║
+║  Status:     ⏳ PENDING (60% pre-done)                                       ║
+║  Effort:     1 week (5 days)                                                 ║
 ║  Depends:    Catalog                                                         ║
 ║  Unlocks:    Frontend                                                        ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -16,6 +16,8 @@
 ## Objective
 
 Build the core differentiator: multi-objective Pareto optimization that helps users find the best trade-offs between price, performance, and features - not just the cheapest option.
+
+**Good news**: The Pareto calculator is already fully implemented in `apps/workers/src/pareto/calculator.py`!
 
 ## What is Pareto Optimization?
 
@@ -69,19 +71,27 @@ Build the core differentiator: multi-objective Pareto optimization that helps us
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| API Layer | Go + Gin | Request handling |
-| Calculation | Python | Pareto algorithm |
+| API Layer | Go + Chi | Request handling |
+| Calculation | Python 3.14 | Pareto algorithm |
 | Library | paretoset | Efficient Pareto calculation |
 | Scoring | scipy | Z-score normalization |
-| Cache | Redis | Result caching |
+| Cache | Redis 8.4 | Result caching |
 
-## Phases
+## Milestones
 
-| # | Phase | Effort | Description |
-|---|-------|--------|-------------|
-| 01 | [Pareto Engine](./01-pareto-engine.md) | 3d | Python paretoset implementation |
-| 02 | [API Integration](./02-api-integration.md) | 2d | Go API endpoints |
-| 03 | [Scoring & Ranking](./03-scoring.md) | 2d | Z-scores, rankings |
+| # | Phase | Effort | Status | Description |
+|---|-------|--------|--------|-------------|
+| M1 | [Pareto Engine](./01-pareto-engine.md) | 3d | ✅ Done | Python paretoset implementation |
+| M2 | [API Integration](./02-api-integration.md) | 2d | ⏳ Pending | Go API endpoints |
+| M3 | [Scoring & Ranking](./03-scoring.md) | 2d | ⏳ Pending | Z-scores, rankings |
+
+## Progress: 60%
+
+```
+M1 Pareto Engine   [██████████] 100% ✅ (calculator.py exists!)
+M2 API Integration [░░░░░░░░░░]   0%
+M3 Scoring         [██████░░░░]  60% (z-score in calculator)
+```
 
 ## Comparison Criteria
 
@@ -135,12 +145,51 @@ products = [
 | Cache hit rate | >70% |
 | Pareto calculation | <100ms for 100 products |
 
+## What's Already Implemented
+
+The Pareto calculator (`apps/workers/src/pareto/calculator.py`) includes:
+
+```python
+class ParetoCalculator:
+    def calculate(self, products: list[dict[str, Any]]) -> ParetoResult:
+        """
+        Calculate Pareto frontier and scores for products.
+
+        Features:
+        - Uses paretoset library for efficient calculation
+        - Min-max normalization with configurable weights
+        - Z-score calculation for relative rankings
+        - Handles missing attributes gracefully
+        """
+        # Build attribute matrix
+        matrix = self._build_matrix(products, criteria)
+
+        # Calculate Pareto frontier
+        pareto_mask = paretoset(matrix, sense=sense)
+
+        # Calculate scores
+        scores = self._calculate_scores(products, criteria)
+
+        return ParetoResult(
+            frontier_ids=[...],
+            dominated_ids=[...],
+            scores={...}
+        )
+```
+
+## Remaining Work
+
+- [ ] Go API endpoints (`POST /api/v1/compare`)
+- [ ] Redis caching for comparison results
+- [ ] Celery task for async comparison
+- [ ] Frontend-ready response format
+
 ## Deliverables
 
-- [ ] Python Pareto engine
+- [x] Python Pareto engine ✅
+- [x] Z-score normalization ✅
 - [ ] Go API integration
-- [ ] Z-score normalization
-- [ ] Product ranking
+- [ ] Product ranking endpoint
 - [ ] Result caching
 - [ ] Frontend-ready responses
 

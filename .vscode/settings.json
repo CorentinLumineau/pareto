@@ -1,0 +1,221 @@
+{
+  // ============================================
+  // Editor Settings
+  // ============================================
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.trimAutoWhitespace": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // ============================================
+  // File Associations
+  // ============================================
+  "files.associations": {
+    "*.css": "tailwindcss",
+    ".env*": "dotenv",
+    "*.toml": "toml"
+  },
+
+  // ============================================
+  // Go Settings
+  // ============================================
+  "go.useLanguageServer": true,
+  "go.toolsManagement.autoUpdate": true,
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--fast"],
+  "go.testFlags": ["-v", "-race"],
+  "go.coverOnSave": false,
+  "go.coverOnSingleTest": true,
+  "go.coverOnSingleTestFile": true,
+  "gopls": {
+    "ui.semanticTokens": true,
+    "formatting.gofumpt": true
+  },
+  "[go]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[go.mod]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go"
+  },
+
+  // ============================================
+  // Python Settings
+  // ============================================
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["apps/workers"],
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 4,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  // ============================================
+  // TypeScript/JavaScript Settings
+  // ============================================
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ============================================
+  // JSON/YAML/Markdown Settings
+  // ============================================
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on"
+  },
+
+  // ============================================
+  // ESLint Settings
+  // ============================================
+  "eslint.enable": true,
+  "eslint.useFlatConfig": true,
+  "eslint.workingDirectories": [
+    { "directory": "apps/web", "changeProcessCWD": true },
+    { "directory": "apps/mobile", "changeProcessCWD": true },
+    { "directory": "packages/api-client", "changeProcessCWD": true },
+    { "directory": "packages/utils", "changeProcessCWD": true },
+    { "directory": "packages/types", "changeProcessCWD": true }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // ============================================
+  // Tailwind CSS Settings
+  // ============================================
+  "tailwindCSS.includeLanguages": {
+    "typescriptreact": "html",
+    "javascriptreact": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.emmetCompletions": true,
+
+  // ============================================
+  // Prettier Settings
+  // ============================================
+  "prettier.requireConfig": true,
+  "prettier.singleQuote": true,
+
+  // ============================================
+  // Spell Checker Settings
+  // ============================================
+  "cSpell.words": [
+    "Pareto",
+    "paretoset",
+    "timescaledb",
+    "pgx",
+    "celery",
+    "turbopack",
+    "tailwindcss",
+    "nativewind",
+    "tanstack",
+    "shadcn",
+    "recharts",
+    "dokploy",
+    "cloudflare",
+    "hetzner"
+  ],
+  "cSpell.ignorePaths": [
+    "node_modules",
+    "pnpm-lock.yaml",
+    "go.sum",
+    ".git"
+  ],
+
+  // ============================================
+  // Search Settings
+  // ============================================
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.turbo": true,
+    "**/dist": true,
+    "**/.next": true,
+    "**/.expo": true,
+    "**/coverage": true,
+    "**/tmp": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/vendor": true
+  },
+
+  // ============================================
+  // Files to Exclude from Explorer
+  // ============================================
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+
+  // ============================================
+  // Terminal Settings
+  // ============================================
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.env.linux": {
+    "DATABASE_URL": "postgresql://pareto:pareto_dev@postgres:5432/pareto_dev?sslmode=disable",
+    "REDIS_URL": "redis://redis:6379/0"
+  }
+}

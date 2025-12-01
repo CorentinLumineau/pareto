@@ -1,0 +1,50 @@
+{
+  "recommendations": [
+    // Go Development
+    "golang.go",
+
+    // Python Development
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff",
+
+    // JavaScript/TypeScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+
+    // React/Next.js
+    "dsznajder.es7-react-js-snippets",
+    "formulahendry.auto-rename-tag",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+
+    // Docker
+    "ms-azuretools.vscode-docker",
+
+    // Database
+    "prisma.prisma",
+    "cweijan.vscode-database-client2",
+
+    // Git
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // Editor Enhancement
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "EditorConfig.EditorConfig",
+    "mikestead.dotenv",
+
+    // API Testing
+    "humao.rest-client",
+
+    // File Icons
+    "file-icons.file-icons",
+
+    // Markdown
+    "yzhang.markdown-all-in-one"
+  ],
+  "unwantedRecommendations": []
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@pareto/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Go API for Pareto Comparator",
+  "scripts": {
+    "build": "go build -o bin/api ./cmd/api",
+    "dev": "go run ./cmd/api",
+    "test": "go test ./...",
+    "lint": "golangci-lint run"
+  }
+}

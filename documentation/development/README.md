@@ -4,34 +4,53 @@
 
 ## Quick Start
 
+### Option 1: Devcontainer (Recommended)
+
+The fastest way to start developing - everything runs in containers with hot reload:
+
+1. Open project in VS Code
+2. Press `F1` → "Dev Containers: Reopen in Container"
+3. Wait for build (~5 minutes first time)
+4. Run `dev` to start all services
+
+See [Devcontainer Guide](./devcontainer.md) for details.
+
+### Option 2: Local Setup
+
 ```bash
 # 1. Clone repository
 git clone https://github.com/clumineau/pareto-comparator.git
 cd pareto-comparator
 
-# 2. Start infrastructure (PostgreSQL, Redis)
-docker compose up -d postgres redis
+# 2. Install dependencies
+make install
 
-# 3. Start backend
-cd backend && go run cmd/server/main.go
+# 3. Start infrastructure (PostgreSQL, Redis)
+make docker-up
 
-# 4. Start workers
-cd workers && celery -A celery_app worker --loglevel=info
-
-# 5. Start frontend
-cd frontend && npm run dev
+# 4. Start all services with Turbo
+make dev
 ```
 
 ## Prerequisites
 
-### Required Tools
+### For Devcontainer (Recommended)
+
+| Tool | Purpose | Installation |
+|------|---------|--------------|
+| **Docker Desktop** | Container runtime | [docker.com](https://docker.com) |
+| **VS Code** | Editor | [code.visualstudio.com](https://code.visualstudio.com) |
+| **Dev Containers Extension** | VS Code extension | Install from VS Code |
+
+### For Local Development
 
 | Tool | Version | Installation |
 |------|---------|--------------|
-| **Go** | 1.23.4+ | [golang.org/dl](https://golang.org/dl/) |
-| **Python** | 3.13.1+ | [python.org](https://python.org) or `pyenv` |
-| **Node.js** | 22.12+ LTS | [nodejs.org](https://nodejs.org) or `nvm` |
-| **Docker** | 27.4+ | [docker.com](https://docker.com) |
+| **Go** | 1.24+ | [golang.org/dl](https://golang.org/dl/) |
+| **Python** | 3.14+ | [python.org](https://python.org) or `pyenv` |
+| **Node.js** | 24.x LTS | [nodejs.org](https://nodejs.org) or `nvm` |
+| **pnpm** | 9.14+ | `npm install -g pnpm` |
+| **Docker** | 29+ | [docker.com](https://docker.com) |
 | **Docker Compose** | 2.x | Included with Docker Desktop |
 
 ### Optional Tools
@@ -361,6 +380,7 @@ npm run dev
 
 ## Files in this Section
 
+- [Devcontainer Guide](./devcontainer.md) - Full containerized development (recommended)
 - [Local Setup](./local-setup.md) - Detailed setup instructions
 - [Environment Variables](./environment.md) - All env vars explained
 - [Docker Guide](./docker.md) - Container management

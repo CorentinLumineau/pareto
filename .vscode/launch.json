@@ -1,0 +1,162 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ============================================
+    // Go API Debugging
+    // ============================================
+    {
+      "name": "Go: Launch API",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/apps/api/cmd/api",
+      "cwd": "${workspaceFolder}/apps/api",
+      "env": {
+        "DATABASE_URL": "postgresql://pareto:pareto_dev@postgres:5432/pareto_dev?sslmode=disable",
+        "REDIS_URL": "redis://redis:6379/0",
+        "GO_ENV": "development",
+        "PORT": "8080"
+      },
+      "args": []
+    },
+    {
+      "name": "Go: Attach to Air",
+      "type": "go",
+      "request": "attach",
+      "mode": "local",
+      "processId": "${command:pickProcess}",
+      "cwd": "${workspaceFolder}/apps/api"
+    },
+    {
+      "name": "Go: Test Current File",
+      "type": "go",
+      "request": "launch",
+      "mode": "test",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}/apps/api"
+    },
+    {
+      "name": "Go: Test Current Package",
+      "type": "go",
+      "request": "launch",
+      "mode": "test",
+      "program": "${fileDirname}",
+      "cwd": "${workspaceFolder}/apps/api",
+      "args": ["-v"]
+    },
+
+    // ============================================
+    // Python Workers Debugging
+    // ============================================
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}/apps/workers",
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/workers/src",
+        "CELERY_BROKER_URL": "redis://redis:6379/1",
+        "CELERY_RESULT_BACKEND": "redis://redis:6379/2"
+      }
+    },
+    {
+      "name": "Python: Celery Worker",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "celery",
+      "args": ["-A", "src.main", "worker", "--loglevel=debug", "--concurrency=1"],
+      "cwd": "${workspaceFolder}/apps/workers",
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/workers/src",
+        "CELERY_BROKER_URL": "redis://redis:6379/1",
+        "CELERY_RESULT_BACKEND": "redis://redis:6379/2"
+      }
+    },
+    {
+      "name": "Python: Pytest",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "-s", "${file}"],
+      "cwd": "${workspaceFolder}/apps/workers",
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/apps/workers/src"
+      }
+    },
+    {
+      "name": "Python: Attach Remote",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/apps/workers",
+          "remoteRoot": "/workspace/apps/workers"
+        }
+      ]
+    },
+
+    // ============================================
+    // Next.js Web Debugging
+    // ============================================
+    {
+      "name": "Next.js: Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/apps/web"
+    },
+    {
+      "name": "Next.js: Server-side",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      }
+    },
+    {
+      "name": "Next.js: Full-stack",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "serverReadyAction": {
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      },
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: API + Web",
+      "configurations": ["Go: Launch API", "Next.js: Chrome"],
+      "stopAll": true
+    },
+    {
+      "name": "Full Stack: API + Workers",
+      "configurations": ["Go: Launch API", "Python: Celery Worker"],
+      "stopAll": true
+    },
+    {
+      "name": "Full Stack: All Services",
+      "configurations": ["Go: Launch API", "Python: Celery Worker", "Next.js: Chrome"],
+      "stopAll": true
+    }
+  ]
+}

@@ -1,13 +1,13 @@
 # Frontend Web Initiative
 
-> **Next.js 15 web application with App Router**
+> **Next.js 16 web application with App Router and React 19**
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                         FRONTEND WEB INITIATIVE                               ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Status:     ⏳ PENDING                                                       ║
-║  Effort:     4 weeks (20 days)                                               ║
+║  Status:     ⏳ PENDING (10% pre-done)                                       ║
+║  Effort:     3 weeks (15 days)                                               ║
 ║  Depends:    Catalog, Comparison, Affiliate                                  ║
 ║  Unlocks:    Launch                                                          ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -16,6 +16,8 @@
 ## Objective
 
 Build a performant, SEO-optimized web application for comparing smartphones with Pareto optimization visualization.
+
+**Already done**: Landing page exists in `apps/web/` with Next.js 16 + React 19 + Tailwind v4.
 
 ## Architecture
 
@@ -46,23 +48,34 @@ Build a performant, SEO-optimized web application for comparing smartphones with
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| Framework | Next.js 15 | SSR, App Router |
-| Language | TypeScript | Type safety |
-| Data | TanStack Query | Server state |
-| Styling | Tailwind CSS | Utility-first CSS |
+| Framework | Next.js 16.0.3 | Turbopack, PPR, App Router |
+| React | React 19.2 | Server Components, Actions |
+| Language | TypeScript 5.7 | Type safety |
+| Data | TanStack Query v5 | Server state |
+| Styling | Tailwind CSS v4 | CSS-first config |
 | Components | shadcn/ui | Accessible components |
 | Charts | Recharts | Data visualization |
 | Forms | React Hook Form + Zod | Form handling |
 
-## Phases
+## Milestones
 
-| # | Phase | Effort | Description |
-|---|-------|--------|-------------|
-| 01 | [Project Setup](./01-setup.md) | 2d | Next.js, Tailwind, shadcn |
-| 02 | [Core Pages](./02-core-pages.md) | 5d | Home, search, product detail |
-| 03 | [Comparison UI](./03-comparison.md) | 5d | Pareto visualization |
-| 04 | [SEO & Performance](./04-seo.md) | 4d | Meta tags, sitemap, Core Web Vitals |
-| 05 | [Polish & Launch](./05-polish.md) | 4d | Responsive, i18n, analytics |
+| # | Phase | Effort | Status | Description |
+|---|-------|--------|--------|-------------|
+| M1 | [Project Setup](./01-setup.md) | 2d | ✅ Done | Next.js, Tailwind, shared packages |
+| M2 | [Core Pages](./02-core-pages.md) | 5d | ⏳ Pending | Home, search, product detail |
+| M3 | [Comparison UI](./03-comparison.md) | 4d | ⏳ Pending | Pareto visualization |
+| M4 | [SEO & Performance](./04-seo.md) | 2d | ⏳ Pending | Meta tags, sitemap, Core Web Vitals |
+| M5 | [Polish & Launch](./05-polish.md) | 2d | ⏳ Pending | Responsive, analytics |
+
+## Progress: 10%
+
+```
+M1 Project Setup   [██████████] 100% ✅
+M2 Core Pages      [░░░░░░░░░░]   0%
+M3 Comparison UI   [░░░░░░░░░░]   0%
+M4 SEO             [░░░░░░░░░░]   0%
+M5 Polish          [░░░░░░░░░░]   0%
+```
 
 ## Page Structure
 

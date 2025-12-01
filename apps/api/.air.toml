@@ -1,0 +1,97 @@
+# Air - Live reload for Go apps
+# https://github.com/air-verse/air
+
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  # Build arguments
+  args_bin = []
+
+  # Binary output
+  bin = "./tmp/main"
+
+  # Build command
+  cmd = "go build -o ./tmp/main ./cmd/api"
+
+  # Delay after detecting file change (in milliseconds)
+  delay = 1000
+
+  # Directories to exclude
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "node_modules", ".git"]
+
+  # File patterns to exclude
+  exclude_file = []
+
+  # Regex patterns to exclude
+  exclude_regex = ["_test.go", "_mock.go"]
+
+  # Exclude unchanged files
+  exclude_unchanged = false
+
+  # Follow symlinks
+  follow_symlink = false
+
+  # Full binary path (used with args_bin)
+  full_bin = ""
+
+  # Directories to include
+  include_dir = []
+
+  # File extensions to watch
+  include_ext = ["go", "tpl", "tmpl", "html", "sql"]
+
+  # Additional files to include
+  include_file = []
+
+  # Kill previous process before starting new one
+  kill_delay = "0s"
+
+  # Enable polling mode for file watching
+  poll = false
+
+  # Polling interval (when poll = true)
+  poll_interval = 0
+
+  # Enable rerun
+  rerun = false
+
+  # Delay for rerun
+  rerun_delay = 500
+
+  # Send SIGINT before SIGKILL
+  send_interrupt = true
+
+  # Stop running old binary when building
+  stop_on_error = false
+
+[color]
+  # Customize colors
+  app = ""
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  # Main log enabled
+  main_only = false
+
+  # Add timestamp to log
+  time = true
+
+[misc]
+  # Clean temp dir on exit
+  clean_on_exit = true
+
+[proxy]
+  # Proxy not enabled - using direct connection
+  enabled = false
+
+[screen]
+  # Clear screen on rebuild
+  clear_on_rebuild = true
+
+  # Keep scroll position
+  keep_scroll = true

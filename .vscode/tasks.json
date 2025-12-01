@@ -1,0 +1,339 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // ============================================
+    // Development Tasks
+    // ============================================
+    {
+      "label": "dev",
+      "detail": "Start all development servers",
+      "type": "shell",
+      "command": "pnpm dev",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:api",
+      "detail": "Start Go API with hot reload",
+      "type": "shell",
+      "command": "air",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:web",
+      "detail": "Start Next.js development server",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/web"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:workers",
+      "detail": "Start Celery workers with auto-reload",
+      "type": "shell",
+      "command": "./scripts/dev.sh worker",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/workers"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:mobile",
+      "detail": "Start Expo development server",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/mobile"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Build Tasks
+    // ============================================
+    {
+      "label": "build",
+      "detail": "Build all applications",
+      "type": "shell",
+      "command": "pnpm build",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build:api",
+      "detail": "Build Go API",
+      "type": "shell",
+      "command": "go build -o bin/api ./cmd/api",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "group": "build",
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "build:web",
+      "detail": "Build Next.js application",
+      "type": "shell",
+      "command": "pnpm build",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/web"
+      },
+      "group": "build",
+      "problemMatcher": ["$tsc"]
+    },
+
+    // ============================================
+    // Test Tasks
+    // ============================================
+    {
+      "label": "test",
+      "detail": "Run all tests",
+      "type": "shell",
+      "command": "pnpm test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "test:go",
+      "detail": "Run Go tests",
+      "type": "shell",
+      "command": "go test -v -race ./...",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "group": "test",
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "test:go:coverage",
+      "detail": "Run Go tests with coverage",
+      "type": "shell",
+      "command": "go test -v -race -coverprofile=coverage.out ./... && go tool cover -html=coverage.out -o coverage.html",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "group": "test",
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "test:python",
+      "detail": "Run Python tests",
+      "type": "shell",
+      "command": "source /workspace/.venv/bin/activate && pytest -v",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/workers"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "test:python:coverage",
+      "detail": "Run Python tests with coverage",
+      "type": "shell",
+      "command": "source /workspace/.venv/bin/activate && pytest --cov=src --cov-report=html",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/workers"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "test:node",
+      "detail": "Run Node.js tests",
+      "type": "shell",
+      "command": "pnpm test",
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Lint Tasks
+    // ============================================
+    {
+      "label": "lint",
+      "detail": "Run all linters",
+      "type": "shell",
+      "command": "pnpm lint",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "lint:go",
+      "detail": "Run Go linter",
+      "type": "shell",
+      "command": "golangci-lint run",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "lint:python",
+      "detail": "Run Python linter",
+      "type": "shell",
+      "command": "source /workspace/.venv/bin/activate && ruff check src/",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/workers"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "lint:fix",
+      "detail": "Fix linting issues",
+      "type": "shell",
+      "command": "pnpm lint:fix",
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Type Check Tasks
+    // ============================================
+    {
+      "label": "typecheck",
+      "detail": "Run type checking",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "typecheck:python",
+      "detail": "Run Python type checking",
+      "type": "shell",
+      "command": "source /workspace/.venv/bin/activate && mypy src/",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/workers"
+      },
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Database Tasks
+    // ============================================
+    {
+      "label": "db:migrate",
+      "detail": "Run database migrations",
+      "type": "shell",
+      "command": "go run ./cmd/migrate up",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "db:migrate:down",
+      "detail": "Rollback database migrations",
+      "type": "shell",
+      "command": "go run ./cmd/migrate down",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "db:seed",
+      "detail": "Seed database with test data",
+      "type": "shell",
+      "command": "go run ./cmd/seed",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/api"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "db:psql",
+      "detail": "Connect to PostgreSQL",
+      "type": "shell",
+      "command": "psql $DATABASE_URL",
+      "problemMatcher": []
+    },
+    {
+      "label": "db:redis",
+      "detail": "Connect to Redis CLI",
+      "type": "shell",
+      "command": "redis-cli -u $REDIS_URL",
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Docker Tasks
+    // ============================================
+    {
+      "label": "docker:up",
+      "detail": "Start Docker containers",
+      "type": "shell",
+      "command": "docker compose -f docker/docker-compose.yml up -d",
+      "problemMatcher": []
+    },
+    {
+      "label": "docker:down",
+      "detail": "Stop Docker containers",
+      "type": "shell",
+      "command": "docker compose -f docker/docker-compose.yml down",
+      "problemMatcher": []
+    },
+    {
+      "label": "docker:logs",
+      "detail": "View Docker logs",
+      "type": "shell",
+      "command": "docker compose -f docker/docker-compose.yml logs -f",
+      "problemMatcher": []
+    },
+    {
+      "label": "docker:build",
+      "detail": "Build Docker images",
+      "type": "shell",
+      "command": "docker compose -f docker/docker-compose.yml build",
+      "problemMatcher": []
+    },
+
+    // ============================================
+    // Utility Tasks
+    // ============================================
+    {
+      "label": "clean",
+      "detail": "Clean build artifacts",
+      "type": "shell",
+      "command": "make clean",
+      "problemMatcher": []
+    },
+    {
+      "label": "install",
+      "detail": "Install all dependencies",
+      "type": "shell",
+      "command": "make install",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@pareto/workers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Python Celery workers for Pareto Comparator",
+  "scripts": {
+    "dev": "celery -A src.tasks.celery_app worker --loglevel=info --concurrency=2",
+    "test": "pytest",
+    "lint": "ruff check src/",
+    "typecheck": "mypy src/"
+  }
+}

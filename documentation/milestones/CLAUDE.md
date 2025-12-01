@@ -4,28 +4,32 @@
 
 ## Quick Reference
 
-| File | Purpose |
-|------|---------|
-| [MASTERPLAN.md](./MASTERPLAN.md) | Master Plan & Roadmap orchestrator |
-| [foundation/](./foundation/) | Infrastructure, monorepo, legal |
-| [scraper/](./scraper/) | Web scraping with anti-bot |
-| [normalizer/](./normalizer/) | HTML parsing, data extraction |
-| [catalog/](./catalog/) | Product database, API |
-| [comparison/](./comparison/) | Pareto optimization engine |
-| [affiliate/](./affiliate/) | Revenue tracking |
-| [frontend/](./frontend/) | Next.js web app |
-| [mobile/](./mobile/) | Expo iOS/Android apps |
-| [launch/](./launch/) | Go-live preparation |
+| File | Purpose | Status |
+|------|---------|--------|
+| [MASTERPLAN.md](./MASTERPLAN.md) | Master Plan & Roadmap orchestrator | Active |
+| [foundation/](./foundation/) | Infrastructure, monorepo, legal | ✅ Complete |
+| [scraper/](./scraper/) | Brand-first scraping | ⏳ In Progress |
+| [normalizer/](./normalizer/) | Brand page parsing | ⏳ Pending (20%) |
+| [catalog/](./catalog/) | Product database, API | ⏳ Pending (5%) |
+| [comparison/](./comparison/) | Pareto optimization engine | ⏳ Pending (60%) |
+| [affiliate/](./affiliate/) | Revenue tracking | ⏳ Pending |
+| [frontend/](./frontend/) | Next.js 16 web app | ⏳ Pending (10%) |
+| [mobile/](./mobile/) | Expo SDK 53 apps | ⏳ Pending (10%) |
+| [launch/](./launch/) | Go-live preparation | ⏳ Pending |
 
 ## Current Status
 
 ```
 ═══════════════════════════════════════════════════
-  Current:  Foundation (Repository Setup)
-  Progress: ~2% overall
-  Target:   MVP in 14-16 weeks
+  Current:  Scraper (Brand-First Approach)
+  Progress: ~25% overall
+  Target:   MVP in 10-12 weeks
 ═══════════════════════════════════════════════════
 ```
+
+## Data Strategy
+
+**Brand-First Scraping**: Complete specs from brand websites (Apple, Samsung, etc.), prices from marketplaces (Amazon, Fnac, etc.). See [scraping-strategy.md](../implementation/scraping-strategy.md).
 
 ## Initiative Structure
 
@@ -57,38 +61,38 @@ milestones/
 
 ## Initiative Overview
 
-| # | Initiative | Phases | Effort | Dependencies |
-|---|------------|--------|--------|--------------|
-| 1 | [Foundation](./foundation/) | 3 | 1 day | None |
-| 2 | [Scraper](./scraper/) | 5 | 3-4w | Foundation |
-| 3 | [Normalizer](./normalizer/) | 4 | 2w | Scraper |
-| 4 | [Catalog](./catalog/) | 4 | 2w | Normalizer |
-| 5 | [Comparison](./comparison/) | 3 | 1.5w | Catalog |
-| 6 | [Affiliate](./affiliate/) | 3 | 1w | Catalog |
-| 7 | [Frontend Web](./frontend/) | 5 | 4w | Catalog, Comparison, Affiliate |
-| 8 | [Mobile](./mobile/) | 5 | 4w | Catalog, Comparison, Affiliate |
-| 9 | [Launch](./launch/) | 4 | 2w | All |
+| # | Initiative | Milestones | Effort | Progress |
+|---|------------|------------|--------|----------|
+| 1 | [Foundation](./foundation/) | 3 | 1 day | ✅ 100% |
+| 2 | [Scraper](./scraper/) | 4 | 2-3w | ⏳ 10% |
+| 3 | [Normalizer](./normalizer/) | 4 | 1.5w | ⏳ 20% |
+| 4 | [Catalog](./catalog/) | 4 | 2w | ⏳ 5% |
+| 5 | [Comparison](./comparison/) | 3 | 1w | ⏳ 60% |
+| 6 | [Affiliate](./affiliate/) | 3 | 1w | ⏳ 0% |
+| 7 | [Frontend Web](./frontend/) | 5 | 3w | ⏳ 10% |
+| 8 | [Mobile](./mobile/) | 5 | 3w | ⏳ 10% |
+| 9 | [Launch](./launch/) | 4 | 2w | ⏳ 0% |
 
 ## Quick Navigation
 
 ### By Status
-- **Active**: Foundation
-- **Pending**: All others
-- **Completed**: None yet
+- **Completed**: Foundation ✅
+- **Active**: Scraper (brand-first)
+- **Pending**: Normalizer, Catalog, Comparison, Affiliate, Frontend, Mobile, Launch
 
-### By Timeline
+### By Timeline (Updated)
 ```
-Week  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
-      │───│───│───│───│───│───│───│───│───│───│───│───│───│───│───│
-FOUND [█]
-SCRAP     [███████]
-NORM              [█████]
-CATAL                   [█████]
-COMP                          [███]
-AFFIL                              [██]
-WEB                                    [███████████]
-MOBILE                                 [███████████]  (parallel)
-LAUNC                                              [█████]
+Week  1   2   3   4   5   6   7   8   9  10  11  12
+      │───│───│───│───│───│───│───│───│───│───│───│
+FOUND [✓] DONE
+SCRAP     [██████]
+NORM            [████]
+CATAL                 [█████]
+COMP                        [███]
+AFFIL                            [██]
+WEB                               [████████]
+MOBILE                            [████████]  (parallel)
+LAUNC                                      [████]
 ```
 
 ## Related Sections

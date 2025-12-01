@@ -1,0 +1,93 @@
+services:
+  # PostgreSQL with TimescaleDB
+  postgres:
+    image: timescale/timescaledb:2.23.0-pg18
+    container_name: pareto-postgres
+    environment:
+      POSTGRES_USER: pareto
+      POSTGRES_PASSWORD: pareto_dev
+      POSTGRES_DB: pareto
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pareto"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:8.4-alpine
+    container_name: pareto-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Go API (for local development with hot reload)
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: pareto-api
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: development
+      PORT: "8080"
+      DATABASE_URL: postgresql://pareto:pareto_dev@postgres:5432/pareto?sslmode=disable
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Next.js Web (for production build testing)
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    container_name: pareto-web
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8080
+    depends_on:
+      - api
+
+  # Python Workers
+  workers:
+    build:
+      context: ../apps/workers
+      dockerfile: Dockerfile
+    container_name: pareto-workers
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      DATABASE_URL: postgresql://pareto:pareto_dev@postgres:5432/pareto
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: pareto-network

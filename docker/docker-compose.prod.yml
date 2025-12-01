@@ -1,0 +1,109 @@
+services:
+  # PostgreSQL with TimescaleDB (Production)
+  postgres:
+    image: timescale/timescaledb:2.23.0-pg18
+    container_name: pareto-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pareto}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+      POSTGRES_DB: ${POSTGRES_DB:-pareto}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pareto}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # Redis (Production)
+  redis:
+    image: redis:8.4-alpine
+    container_name: pareto-redis-prod
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD required}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # Go API (Production)
+  api:
+    image: ghcr.io/clumineau/pareto-api:${TAG:-latest}
+    container_name: pareto-api-prod
+    restart: always
+    environment:
+      APP_ENV: production
+      PORT: "8080"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pareto}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-pareto}?sslmode=disable
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - internal
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pareto-api.rule=Host(`api.comparateur.fr`)"
+      - "traefik.http.routers.pareto-api.tls=true"
+      - "traefik.http.services.pareto-api.loadbalancer.server.port=8080"
+
+  # Next.js Web (Production)
+  web:
+    image: ghcr.io/clumineau/pareto-web:${TAG:-latest}
+    container_name: pareto-web-prod
+    restart: always
+    environment:
+      NEXT_PUBLIC_API_URL: https://api.comparateur.fr
+    depends_on:
+      - api
+    networks:
+      - internal
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pareto-web.rule=Host(`comparateur.fr`) || Host(`www.comparateur.fr`)"
+      - "traefik.http.routers.pareto-web.tls=true"
+      - "traefik.http.services.pareto-web.loadbalancer.server.port=3000"
+
+  # Python Workers (Production)
+  workers:
+    image: ghcr.io/clumineau/pareto-workers:${TAG:-latest}
+    container_name: pareto-workers-prod
+    restart: always
+    environment:
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD}@redis:6379/1
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pareto}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-pareto}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  internal:
+    driver: bridge
+  traefik:
+    external: true

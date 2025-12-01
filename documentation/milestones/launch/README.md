@@ -60,9 +60,9 @@ Final preparations for MVP launch: production deployment, monitoring, testing, a
 | Proxy | Traefik | SSL, routing |
 | CDN | Cloudflare | Caching, DDoS |
 | Tunnel | Cloudflare Tunnel | Secure ingress |
-| Database | PostgreSQL 17 | Data storage |
-| Time-series | TimescaleDB | Price history |
-| Cache | Redis 7.4 | Caching, queue |
+| Database | PostgreSQL 18.1 | Data storage |
+| Time-series | TimescaleDB 2.23 | Price history |
+| Cache | Redis 8.4 | Caching, queue |
 | Monitoring | Uptime Kuma | Health checks |
 | Logs | Loki + Grafana | Log aggregation |
 

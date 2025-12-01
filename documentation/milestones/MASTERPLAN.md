@@ -6,12 +6,12 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                      PARETO COMPARATOR - MVP MASTERPLAN                       ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Status:     PRE-MVP                                                          ║
+║  Status:     IN PROGRESS (~25% complete)                                     ║
 ║  Target:     MVP Launch (Smartphones - France)                                ║
 ║  Platforms:  Web (Next.js) + Mobile (Expo iOS/Android)                       ║
 ║  Developer:  Solo (@clumineau)                                                ║
 ║  Budget:     <30EUR/month                                                     ║
-║  Timeline:   14-16 weeks                                                      ║
+║  Timeline:   10-12 weeks remaining                                            ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -20,9 +20,39 @@
 Build the **best product comparison platform in France** using Pareto optimization to help users find optimal trade-offs, not just the cheapest price.
 
 **MVP Scope**:
-- **Category**: Smartphones from 6 French retailers
+- **Category**: Smartphones from 5 brand websites + 6 marketplaces
 - **Platforms**: Web + iOS + Android (via Expo)
 - **Differentiator**: Multi-objective Pareto optimization
+
+## Data Strategy: Brand-First Approach
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          BRAND-FIRST SCRAPING                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   PRIMARY: Brand Websites (Complete Specs)                                  │
+│   ├── Apple.com/fr     → iPhone models, EAN, all specs                     │
+│   ├── Samsung.com/fr   → Galaxy models, EAN, all specs                     │
+│   ├── Xiaomi.com       → Mi/Redmi models, EAN, all specs                   │
+│   ├── Google Store     → Pixel models, EAN, all specs                      │
+│   └── OnePlus.com      → OnePlus models, EAN, all specs                    │
+│                                                                             │
+│   SECONDARY: Marketplaces (Prices Only)                                     │
+│   ├── Amazon.fr        → Search by EAN → price, stock, URL                 │
+│   ├── Fnac.com         → Search by EAN → price, stock, URL                 │
+│   ├── Cdiscount.com    → Search by EAN → price, stock, URL                 │
+│   ├── Darty.com        → Search by EAN → price, stock, URL                 │
+│   ├── Boulanger.com    → Search by EAN → price, stock, URL                 │
+│   └── LDLC.com         → Search by EAN → price, stock, URL                 │
+│                                                                             │
+│   DATA FLOW:                                                                │
+│   Brand Site → Product (40+ specs) → EAN → Marketplace Search → Prices     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+See [implementation/scraping-strategy.md](../implementation/scraping-strategy.md) for complete details.
 
 ---
 
@@ -86,17 +116,23 @@ LAUNC                                              [█████]
 
 ## Initiatives Summary
 
-| # | Initiative | Effort | Status | Dependencies |
-|---|------------|--------|--------|--------------|
-| 1 | [Foundation](./foundation/) | 1 day | ⏳ Active | None |
-| 2 | [Scraper](./scraper/) | 3-4 weeks | ⏳ Pending | Foundation |
-| 3 | [Normalizer](./normalizer/) | 2 weeks | ⏳ Pending | Scraper |
-| 4 | [Catalog](./catalog/) | 2 weeks | ⏳ Pending | Normalizer |
-| 5 | [Comparison](./comparison/) | 1.5 weeks | ⏳ Pending | Catalog |
-| 6 | [Affiliate](./affiliate/) | 1 week | ⏳ Pending | Catalog |
-| 7 | [Frontend Web](./frontend/) | 4 weeks | ⏳ Pending | Catalog, Comparison, Affiliate |
-| 8 | [Frontend Mobile](./mobile/) | 4 weeks | ⏳ Pending | Catalog, Comparison, Affiliate |
-| 9 | [Launch](./launch/) | 2 weeks | ⏳ Pending | All |
+| # | Initiative | Effort | Status | Progress | Dependencies |
+|---|------------|--------|--------|----------|--------------|
+| 1 | [Foundation](./foundation/) | 1 day | ✅ Complete | 100% | None |
+| 2 | [Scraper](./scraper/) | 2-3 weeks | ⏳ Active | 10% | Foundation |
+| 3 | [Normalizer](./normalizer/) | 1.5 weeks | ⏳ Pending | 20% | Scraper |
+| 4 | [Catalog](./catalog/) | 2 weeks | ⏳ Pending | 5% | Normalizer |
+| 5 | [Comparison](./comparison/) | 1 week | ⏳ Pending | 60% | Catalog |
+| 6 | [Affiliate](./affiliate/) | 1 week | ⏳ Pending | 0% | Catalog |
+| 7 | [Frontend Web](./frontend/) | 3 weeks | ⏳ Pending | 10% | Catalog, Comparison, Affiliate |
+| 8 | [Frontend Mobile](./mobile/) | 3 weeks | ⏳ Pending | 10% | Catalog, Comparison, Affiliate |
+| 9 | [Launch](./launch/) | 2 weeks | ⏳ Pending | 0% | All |
+
+**Key Progress Notes:**
+- Foundation: Turborepo, shared packages, Docker all configured
+- Comparison: Pareto calculator fully implemented in Python
+- Normalizer: Amazon extractor exists, needs brand extractors
+- Frontend/Mobile: Landing pages exist, need API integration
 
 ---
 
@@ -202,20 +238,40 @@ export function ProductList() {
 
 ## Current Focus
 
-### Active: Foundation Initiative
+### Active: Scraper Initiative (Brand-First)
+
+```
+Initiative: SCRAPER
+Status:     IN PROGRESS
+Progress:   10% (skeleton exists, needs brand extractors)
+
+Milestones:
+  ✅ M1: Scraper Skeleton (Go orchestrator exists)
+  ⏳ M2: Brand Extractors (Apple, Samsung, etc.) ← ACTIVE
+  ⏳ M3: Price Scrapers (Amazon, Fnac, etc.)
+  ⏳ M4: Job Queue & Scheduling
+```
+
+**Next Action**: Implement Apple brand extractor
+
+→ [View Scraper Details](./scraper/)
+
+### Completed: Foundation Initiative
 
 ```
 Initiative: FOUNDATION
-Status:     IN PROGRESS
-Progress:   33% (1/3 milestones complete)
+Status:     ✅ COMPLETE
+Progress:   100%
 
-Milestones:
-  ✅ M1: Infrastructure Setup (local PC + Dokploy)
-  ⏳ M2: Monorepo & Turborepo Setup (ACTIVE)
-  ⏳ M3: Legal Setup (DEFERRED)
+Deliverables:
+  ✅ Turborepo monorepo configured
+  ✅ Shared packages (@pareto/types, @pareto/api-client, @pareto/utils)
+  ✅ Go API skeleton with Chi router
+  ✅ Python workers with Celery
+  ✅ Next.js 16 app with landing page
+  ✅ Expo mobile app with landing page
+  ✅ Docker Compose for local dev
 ```
-
-**Next Action**: Setup Turborepo with shared packages
 
 → [View Foundation Details](./foundation/)
 
@@ -223,20 +279,20 @@ Milestones:
 
 ## Progress Tracking
 
-### Overall Progress: ~2%
+### Overall Progress: ~25%
 
 ```
-Foundation   [▓▓▓░░░░░░░]  33%  ← ACTIVE
-Scraper      [░░░░░░░░░░]   0%
-Normalizer   [░░░░░░░░░░]   0%
-Catalog      [░░░░░░░░░░]   0%
-Comparison   [░░░░░░░░░░]   0%
+Foundation   [██████████] 100%  ✅ COMPLETE
+Scraper      [█░░░░░░░░░]  10%  ← ACTIVE
+Normalizer   [██░░░░░░░░]  20%  (Amazon extractor exists)
+Catalog      [░░░░░░░░░░]   5%  (Schema designed)
+Comparison   [██████░░░░]  60%  (Pareto calculator done)
 Affiliate    [░░░░░░░░░░]   0%
-Frontend Web [░░░░░░░░░░]   0%
-Mobile       [░░░░░░░░░░]   0%
+Frontend Web [█░░░░░░░░░]  10%  (Landing page exists)
+Mobile       [█░░░░░░░░░]  10%  (Landing page exists)
 Launch       [░░░░░░░░░░]   0%
-─────────────────────────────
-TOTAL        [░░░░░░░░░░]   2%
+─────────────────────────────────────────────
+TOTAL        [██▓░░░░░░░]  25%
 ```
 
 ### Success Metrics
@@ -286,6 +342,9 @@ TOTAL        [░░░░░░░░░░]   2%
 | 2025-12-01 | Expo for mobile | Cross-platform, shared packages |
 | 2025-12-01 | Web + Mobile parallel | Same API, shared code |
 | 2025-12-01 | Defer legal | Validate first |
+| 2025-12-01 | **Brand-first scraping** | Complete specs from source, easier to scrape |
+| 2025-12-01 | EAN-based matching | Universal product identifier for cross-retailer matching |
+| 2025-12-01 | December 2025 stack | Go 1.24, Python 3.14, Next.js 16, Expo 53, PostgreSQL 18 |
 
 ---
 
