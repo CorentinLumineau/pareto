@@ -1,0 +1,213 @@
+# Pareto Comparator - Project Configuration
+# Generated: 2025-12-01
+# Version: 1.0.0
+# Stack Validated: 2025-12-01 (User preferences confirmed)
+
+project:
+  name: Pareto Comparator
+  description: Multi-objective comparison SaaS platform for French market
+  domain: comparateur.fr  # To be purchased
+  status: pre-mvp
+  goal: validate_business_model  # Primary objective
+
+team:
+  size: solo
+  primary_developer: clumineau
+  experience_level: strong_but_learning
+  time_commitment: variable
+
+budget:
+  monthly: "<50EUR"
+  approach: minimal_then_scale
+  infrastructure: "VPS + domain only initially"
+  proxies: "Start with free tier / datacenter, upgrade when validating"
+
+legal:
+  status: will_start_later
+  entity_type: SASU
+  timing: "Register when ready to launch MVP"
+
+# =============================================================================
+# VALIDATED STACK (User Preferences - Dec 2025)
+# =============================================================================
+
+stack:
+  backend:
+    - name: go
+      version: "1.23.4"
+      description: Modular monolith API
+    - name: gin
+      version: "1.10.0"
+      context7_id: "/gin-gonic/gin"
+      description: HTTP router (user preference)
+    - name: gorm
+      version: "1.25+"
+      description: ORM for PostgreSQL (user preference)
+    - name: python
+      version: "3.13.1"
+      description: Celery workers for scraping and Pareto calculation
+    - name: celery
+      version: "5.4+"
+      description: Task queue with Redis broker (user preference)
+
+  frontend:
+    - name: nextjs
+      version: "15.1.0"
+      context7_id: "/vercel/next.js/v15.1.8"
+      description: SSR/RSC for SEO-optimized pages with App Router
+    - name: react
+      version: "19.0.0"
+      context7_id: "/facebook/react/v19_1_1"
+      description: React 19 with Server Components
+    - name: tailwindcss
+      version: "4.0.0"
+      context7_id: "/websites/tailwindcss"
+      description: Utility-first CSS framework v4
+    - name: typescript
+      version: "5.7+"
+      description: Type safety
+
+  tanstack:  # User preference
+    - name: "@tanstack/react-query"
+      version: "5.62+"
+      description: Data fetching, caching, server state
+    - name: "@tanstack/react-table"
+      version: "8.20+"
+      description: Headless table with sorting, filtering, pagination
+    - name: "@tanstack/react-form"
+      version: "0.34+"
+      description: Form state management
+
+  ui:  # User preferences
+    - name: "shadcn/ui"
+      description: Copy-paste components, Radix primitives
+    - name: recharts
+      version: "2.14+"
+      description: Pareto visualization with shadcn integration
+    - name: zod
+      version: "3.24+"
+      description: Schema validation for forms
+
+  database:
+    - name: postgresql
+      version: "17.2"
+      description: Primary database with JSONB attributes
+    - name: timescaledb
+      version: "2.17.0"
+      description: Time-series extension for price history
+    - name: redis
+      version: "7.4.1"
+      description: Cache, job queue (Celery broker), pub/sub
+
+  infrastructure:
+    - name: docker
+      version: "27.4.0"
+      description: Container orchestration
+    - name: dokploy
+      version: "latest"
+      description: Self-hosted deployment platform (user preference)
+    - name: github-actions
+      description: CI/CD pipeline
+    - name: node
+      version: "22.12.0"
+      description: JavaScript runtime for frontend
+    - name: hetzner
+      plan: "CPX21 (3vCPU, 4GB RAM)"  # Budget tier
+      price: "~8EUR/month"
+      description: VPS hosting
+
+  libraries:
+    python:
+      - curl_cffi>=0.7.0  # Anti-bot bypass
+      - celery>=5.4.0  # Task queue
+      - beautifulsoup4>=4.12.0  # HTML parsing
+      - pydantic>=2.10.0  # Data validation
+      - paretoset>=1.2.0  # Pareto frontier calculation
+      - lxml>=5.3.0  # Fast HTML parser
+    go:
+      - gin-gonic/gin  # HTTP router
+      - gorm.io/gorm  # ORM
+      - gorm.io/driver/postgres  # PostgreSQL driver
+      - redis/go-redis/v9  # Redis client
+      - lithammer/fuzzysearch  # Entity matching
+
+# =============================================================================
+# MVP SCOPE
+# =============================================================================
+
+verticals:
+  mvp:
+    - smartphones  # User preference - single category for MVP focus
+  future:
+    - laptops
+    - headphones
+    - tablets
+    - saas
+    - banking
+
+retailers:
+  mvp:
+    - amazon.fr
+    - fnac.com
+    - cdiscount.com
+    - darty.com
+    - boulanger.com
+    - ldlc.com
+
+# =============================================================================
+# MONETIZATION (Deferred until MVP validation)
+# =============================================================================
+
+monetization:
+  primary: affiliate_marketing
+  status: not_applied_yet
+  networks:
+    - name: amazon_associates
+      status: pending
+      timing: "Apply when MVP has traffic"
+    - name: awin
+      status: pending
+      retailers: [fnac, darty, cdiscount]
+    - name: effinity
+      status: pending
+      retailers: [boulanger]
+
+# =============================================================================
+# COMPLIANCE
+# =============================================================================
+
+compliance:
+  - gdpr
+  - decree_2017_1434  # French transparency law
+  - dsp2  # Open Banking (future)
+
+# =============================================================================
+# ARCHITECTURE
+# =============================================================================
+
+architecture:
+  pattern: modular_monolith
+  rationale: "Solo dev, YAGNI, validate first"
+  services:
+    - name: go_monolith
+      framework: gin
+      orm: gorm
+      responsibilities:
+        - REST API
+        - Scraper orchestration
+        - Affiliate link generation
+    - name: python_workers
+      framework: celery
+      broker: redis
+      responsibilities:
+        - HTML fetching (curl_cffi)
+        - HTML parsing (BeautifulSoup)
+        - Pareto calculation (paretoset)
+    - name: nextjs_frontend
+      framework: nextjs_15
+      data_fetching: tanstack_query
+      ui: shadcn_ui
+      responsibilities:
+        - SSR pages
+        - Pareto visualization
+        - SEO optimization
