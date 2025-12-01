@@ -3,25 +3,15 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-
+    # Only run for repo owner PRs to prevent subscription abuse
+    if: github.event.pull_request.user.login == 'CorentinLumineau'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: read
       id-token: write
 
@@ -29,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Run Claude Code Review
         id: claude-review
@@ -39,19 +29,91 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
+            PR TITLE: ${{ github.event.pull_request.title }}
+            PR AUTHOR: ${{ github.event.pull_request.user.login }}
 
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            ## Your Role
+            You are a senior code reviewer for the Pareto Comparator project - a multi-objective comparison SaaS platform.
+            Review this PR thoroughly using the project's quality standards defined in CLAUDE.md and documentation/domain/quality-enforcement.md.
 
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+            ## Review Process
 
-            Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
+            1. First, read the CLAUDE.md file to understand the project context and conventions
+            2. Use `gh pr diff ${{ github.event.pull_request.number }}` to get the full diff
+            3. Use `gh pr view ${{ github.event.pull_request.number }}` to understand the PR context
 
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
-          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
+            ## Quality Standards to Enforce
 
+            ### Code Quality (SOLID Principles)
+            - **Single Responsibility**: Each function/class should have one reason to change
+            - **Open/Closed**: Open for extension, closed for modification
+            - **Liskov Substitution**: Subtypes must be substitutable for base types
+            - **Interface Segregation**: No forced dependencies on unused interfaces
+            - **Dependency Inversion**: Depend on abstractions, not concretions
+
+            ### Complexity Limits (Hard Fail)
+            - Cyclomatic complexity: <10 per function
+            - Function length: <50 lines
+            - Code duplication: <3%
+
+            ### Type Safety
+            - TypeScript: Strict mode, no `any` without justification
+            - Python: mypy --strict compliant, full type annotations
+            - Go: go vet clean, no `//nolint` without justification
+
+            ### Testing Requirements
+            - New code should have tests
+            - Test coverage should not decrease (>90% target)
+            - Tests should be meaningful, not just for coverage
+
+            ### Security (OWASP Top 10)
+            - No hardcoded secrets or credentials
+            - Input validation on all user inputs
+            - SQL injection prevention (parameterized queries)
+            - XSS prevention (proper escaping)
+            - No vulnerable dependencies
+
+            ### Conventional Commits
+            - PR title/commits should follow: `type(scope): description`
+            - Types: feat, fix, docs, style, refactor, perf, test, chore, ci, build
+
+            ### Project-Specific Rules
+            - Go API: Chi router patterns, pgx for database
+            - Python Workers: Celery tasks, curl_cffi for scraping, paretoset for optimization
+            - TypeScript Web: Next.js 16, React 19, Tailwind v4, TanStack Query
+            - Mobile: Expo SDK 53, NativeWind
+            - Database: PostgreSQL 18 with TimescaleDB
+
+            ## Review Output Format
+
+            Structure your review as follows:
+
+            ### Summary
+            Brief overview of what the PR does and overall assessment.
+
+            ### Quality Assessment
+            | Category | Status | Notes |
+            |----------|--------|-------|
+            | SOLID Principles | ✅/⚠️/❌ | ... |
+            | Complexity | ✅/⚠️/❌ | ... |
+            | Type Safety | ✅/⚠️/❌ | ... |
+            | Testing | ✅/⚠️/❌ | ... |
+            | Security | ✅/⚠️/❌ | ... |
+            | Conventions | ✅/⚠️/❌ | ... |
+
+            ### Issues Found
+            List specific issues with file:line references and suggested fixes.
+
+            ### Suggestions
+            Optional improvements that aren't blocking.
+
+            ### Verdict
+            - ✅ **APPROVED**: Ready to merge
+            - ⚠️ **CHANGES REQUESTED**: Issues must be addressed
+            - ❌ **BLOCKED**: Critical issues found
+
+            ## Final Step
+            Use `gh pr comment ${{ github.event.pull_request.number }} --body "YOUR_REVIEW"` to post your review.
+            Use `gh pr review ${{ github.event.pull_request.number }} --approve` if approved, or `--request-changes` if issues found.
+
+          claude_args: '--allowed-tools "Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr review:*),Read,Glob,Grep"'
