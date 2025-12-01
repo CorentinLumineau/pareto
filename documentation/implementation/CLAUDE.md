@@ -7,6 +7,7 @@
 | File | Purpose |
 |------|---------|
 | [README.md](./README.md) | Architecture overview |
+| [scaling/](./scaling/) | Scaling strategy and architecture |
 
 ## Architecture Pattern
 
@@ -50,6 +51,16 @@ Shared Packages (packages/)
 | Mobile | Expo SDK | 53 |
 | Database | PostgreSQL + TimescaleDB | 18.1 |
 | Cache | Redis | 8.4.0 |
+
+## Scaling Documentation
+
+Comprehensive scaling strategy in `scaling/`:
+- [README.md](./scaling/README.md) - Master scaling strategy
+- [vertical-expansion.md](./scaling/vertical-expansion.md) - Category scaling (smartphones → SaaS → banking)
+- [geographic-expansion.md](./scaling/geographic-expansion.md) - Multi-country (France → EU → Global)
+- [platform-expansion.md](./scaling/platform-expansion.md) - API, B2B, white-label
+- [infrastructure-scaling.md](./scaling/infrastructure-scaling.md) - VPS → Kubernetes
+- [data-architecture.md](./scaling/data-architecture.md) - Multi-tenant data model
 
 ## Related Sections
 

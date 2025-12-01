@@ -8,7 +8,7 @@
 |---------|---------|-----------|
 | [Domain](./domain/) | Business logic, Pareto algorithms, comparison rules | [Overview](./domain/README.md), [Pareto Logic](./domain/pareto-optimization.md) |
 | [Development](./development/) | Setup, workflows, contribution | [Getting Started](./development/README.md) |
-| [Implementation](./implementation/) | Technical specs, architecture | [Architecture](./implementation/README.md) |
+| [Implementation](./implementation/) | Technical specs, architecture, scaling | [Architecture](./implementation/README.md), [Scaling](./implementation/scaling/) |
 | [Milestones](./milestones/) | Roadmap, initiatives, phases | [MASTERPLAN](./milestones/MASTERPLAN.md) |
 | [Reference](./reference/) | Stack docs, API specs, original specs | [Stack](./reference/stack/README.md), [Specs](./reference/specs/) |
 
@@ -61,6 +61,21 @@ Stack: December 2025 (Go 1.24, Python 3.14, Next.js 16, Expo 53)
 2. **Modular Monolith** - Clean boundaries, single deployment
 3. **Pareto Value** - Multi-objective optimization as differentiator
 4. **France First** - French retailers, French compliance, then expand
+5. **Scale Ready** - Architecture designed for multi-dimensional growth
+
+## Scaling Dimensions
+
+```
+GEOGRAPHIC          VERTICAL            PLATFORM            INFRASTRUCTURE
+──────────          ────────            ────────            ──────────────
+France (MVP)        Smartphones         Web/Mobile          Single VPS
+     ↓                   ↓                  ↓                    ↓
+EU Countries        Consumer Elec       Public API          Multi-VPS
+     ↓                   ↓                  ↓                    ↓
+Global              SaaS/Banking        White-Label         Kubernetes
+```
+
+See [implementation/scaling/](./implementation/scaling/) for complete scaling documentation.
 
 ## Getting Started
 
