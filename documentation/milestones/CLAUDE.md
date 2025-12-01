@@ -16,6 +16,7 @@
 | [frontend/](./frontend/) | Next.js 16 web app | ⏳ Pending (10%) |
 | [mobile/](./mobile/) | Expo SDK 53 apps | ⏳ Pending (10%) |
 | [launch/](./launch/) | Go-live preparation | ⏳ Pending |
+| [quality-enforcement/](./quality-enforcement/) | `make verify`, coverage, type safety | ✅ Complete |
 
 ## Current Status
 
@@ -56,7 +57,8 @@ milestones/
 ├── affiliate/                 # 1 week
 ├── frontend/                  # 4 weeks (web)
 ├── mobile/                    # 4 weeks (parallel with web)
-└── launch/                    # 2 weeks
+├── launch/                    # 2 weeks
+└── quality-enforcement/       # 1.5 weeks (cross-cutting)
 ```
 
 ## Initiative Overview
@@ -72,11 +74,12 @@ milestones/
 | 7 | [Frontend Web](./frontend/) | 5 | 3w | ⏳ 10% |
 | 8 | [Mobile](./mobile/) | 5 | 3w | ⏳ 10% |
 | 9 | [Launch](./launch/) | 4 | 2w | ⏳ 0% |
+| 10 | [Quality Enforcement](./quality-enforcement/) | 6 | 1.5w | ✅ 100% |
 
 ## Quick Navigation
 
 ### By Status
-- **Completed**: Foundation ✅
+- **Completed**: Foundation ✅, Quality Enforcement ✅
 - **Active**: Scraper (brand-first)
 - **Pending**: Normalizer, Catalog, Comparison, Affiliate, Frontend, Mobile, Launch
 

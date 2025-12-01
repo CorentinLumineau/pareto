@@ -35,49 +35,40 @@ cat documentation/milestones/MASTERPLAN.md
 ```
 pareto/
 ├── CLAUDE.md                           # This file - project entry point
+├── Makefile                            # Main entry (includes make/*.mk)
+├── make/                               # Modular Makefile (SOLID)
+│   ├── dev.mk                          # Development commands
+│   ├── quality.mk                      # Lint, test, verify
+│   ├── docker.mk                       # Docker management
+│   ├── devcontainer.mk                 # VS Code devcontainer
+│   └── db.mk                           # Atlas database commands
+├── apps/api/
+│   ├── schema.sql                      # Database schema (source of truth)
+│   ├── atlas.hcl                       # Atlas configuration
+│   └── migrations/                     # Auto-generated migrations
 └── documentation/
     ├── CLAUDE.md                       # Documentation hub
     ├── config.yaml                     # Stack configuration
     ├── domain/                         # Business logic
     │   ├── README.md                   # Domain overview
-    │   └── pareto-optimization.md      # Pareto algorithm explained
+    │   ├── pareto-optimization.md      # Pareto algorithm
+    │   └── quality-enforcement.md      # Quality standards
     ├── development/                    # Setup guides
-    │   └── README.md                   # Local development setup
+    │   ├── README.md                   # Local development setup
+    │   ├── database.md                 # Atlas migrations guide
+    │   └── devcontainer.md             # Devcontainer setup
     ├── implementation/                 # Technical specs
-    │   └── README.md                   # Architecture details
+    │   ├── README.md                   # Architecture details
+    │   ├── data-flow.md                # Scraping → UI pipeline
+    │   ├── scraping-strategy.md        # Brand-first approach
+    │   └── scaling/                    # Scaling documentation
     ├── milestones/                     # Roadmap & initiatives
     │   ├── MASTERPLAN.md               # Overall roadmap
-    │   ├── foundation/                 # Infrastructure setup
-    │   ├── scraper/                    # Web scraping module
-    │   ├── normalizer/                 # Data normalization
-    │   ├── catalog/                    # Product catalog
-    │   ├── comparison/                 # Pareto engine
-    │   ├── affiliate/                  # Revenue tracking
-    │   ├── frontend/                   # Web application
-    │   ├── mobile/                     # Mobile app
-    │   └── launch/                     # Go-live checklist
+    │   ├── quality-enforcement/        # Quality initiative
+    │   └── ...                         # Other initiatives
     └── reference/                      # Stack docs & specs
         ├── specs/                      # Original specifications
-        │   ├── blueprint.md            # Strategic vision
-        │   ├── architecture.md         # Technical architecture
-        │   ├── scrapper-module.md      # Scraping specification
-        │   ├── normalizer-catalog.md   # Data processing
-        │   ├── comparaison-catalog.md  # Pareto + affiliate
-        │   ├── frontend.md             # Frontend specification
-        │   └── infrastructure.md       # DevOps specification
         └── stack/                      # Technology documentation
-            ├── README.md               # Stack overview
-            ├── go.md                   # Go 1.24 + Chi router
-            ├── python.md               # Python 3.14 + Celery
-            ├── nextjs.md               # Next.js 16
-            ├── react.md                # React 19.2
-            ├── tailwind.md             # Tailwind CSS v4
-            ├── expo.md                 # Expo SDK 53
-            ├── react-native.md         # React Native 0.79
-            ├── postgresql.md           # PostgreSQL 18
-            ├── redis.md                # Redis 8.4
-            ├── docker.md               # Docker 29
-            └── cloudflare.md           # Cloudflare Tunnel
 ```
 
 ## Technology Stack (December 2025)
@@ -170,6 +161,8 @@ A product is **Pareto-optimal** if no other product beats it on ALL criteria. Us
 | Understand architecture | `documentation/reference/specs/architecture.md` |
 | Stack configuration | `documentation/config.yaml` |
 | Setup development env | `documentation/development/README.md` |
+| Database management | `documentation/development/database.md` |
+| Database schema | `apps/api/schema.sql` |
 | View roadmap | `documentation/milestones/MASTERPLAN.md` |
 | Domain rules | `documentation/domain/README.md` |
 | Technical specs | `documentation/implementation/README.md` |
@@ -177,19 +170,31 @@ A product is **Pareto-optimal** if no other product beats it on ALL criteria. Us
 
 ## Commands
 
+Makefile is modular (SOLID) - see `make/` directory.
+
 ```bash
-# Development
+# Development (make/dev.mk)
+make install       # Install dependencies + hooks
 make dev           # Start all services
+make verify        # Run ALL quality checks
+
+# Quality (make/quality.mk)
+make lint          # Run linters
 make test          # Run all tests
-make lint          # Lint code
+make typecheck     # Type checking
 
-# Database
-make migrate-up    # Run migrations
-make seed          # Seed test data
+# Database (make/db.mk) - Atlas (Prisma-like DX)
+make db-diff name=add_feature  # Generate migration
+make db-apply                  # Apply migrations
+make db-status                 # Check status
 
-# Deployment
-make build         # Build Docker images
-make deploy        # Deploy to production
+# Devcontainer (make/devcontainer.mk)
+make devcontainer-up      # Start devcontainer
+make devcontainer-shell   # Open shell
+
+# Docker (make/docker.mk)
+make docker-up     # Start containers
+make build         # Build images
 ```
 
 ## Legal Requirements (France)

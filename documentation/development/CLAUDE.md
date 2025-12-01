@@ -7,21 +7,28 @@
 | File | Purpose |
 |------|---------|
 | [README.md](./README.md) | Quick start and overview |
+| [database.md](./database.md) | Atlas database migrations (Prisma-like DX) |
+| [devcontainer.md](./devcontainer.md) | VS Code devcontainer setup |
 
 ## Quick Commands
 
 ```bash
-# Start everything
-docker compose up -d
+# Start everything (devcontainer recommended)
+make devcontainer-up
 
-# Start development
+# Start development servers
 make dev
 
 # Run tests
 make test
 
-# Build for production
-make build
+# Run ALL quality checks
+make verify
+
+# Database management (Atlas)
+make db-diff name=add_feature  # Generate migration
+make db-apply                  # Apply migrations
+make db-status                 # Check status
 ```
 
 ## Stack Versions (December 2025)
@@ -46,15 +53,26 @@ make build
 ```
 pareto/
 ├── apps/
-│   ├── api/         # Go API server
-│   ├── workers/     # Python Celery workers
-│   ├── web/         # Next.js frontend
-│   └── mobile/      # Expo mobile app
+│   ├── api/              # Go API server
+│   │   ├── atlas.hcl     # Atlas migration config
+│   │   ├── schema.sql    # Declarative schema (source of truth)
+│   │   └── migrations/   # Auto-generated migrations
+│   ├── workers/          # Python Celery workers
+│   ├── web/              # Next.js frontend
+│   └── mobile/           # Expo mobile app
 ├── packages/
-│   ├── api-client/  # Shared API client
-│   ├── types/       # Shared TypeScript types
-│   └── utils/       # Shared utilities
-├── docker-compose.yml
+│   ├── api-client/       # Shared API client
+│   ├── types/            # Shared TypeScript types
+│   └── utils/            # Shared utilities
+├── make/                 # Modular Makefile (SOLID)
+│   ├── dev.mk            # Development commands
+│   ├── quality.mk        # Lint, test, verify
+│   ├── docker.mk         # Docker management
+│   ├── devcontainer.mk   # VS Code devcontainer
+│   └── db.mk             # Atlas database commands
+├── scripts/
+│   └── verify/           # Quality verification scripts
+├── Makefile              # Main entry point
 └── documentation/
 ```
 

@@ -62,6 +62,7 @@ Stack: December 2025 (Go 1.24, Python 3.14, Next.js 16, Expo 53)
 3. **Pareto Value** - Multi-objective optimization as differentiator
 4. **France First** - French retailers, French compliance, then expand
 5. **Scale Ready** - Architecture designed for multi-dimensional growth
+6. **Quality Enforced** - `make verify` with >90% coverage, strict types, security scanning
 
 ## Scaling Dimensions
 

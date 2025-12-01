@@ -146,60 +146,40 @@ workers/src/
 
 ## Database Schema
 
+Database schema is managed declaratively with **Atlas** (Prisma-like DX).
+
+**Source of Truth**: `apps/api/schema.sql`
+
+### Quick Reference
+
+```bash
+# Edit schema, generate migration, apply
+vim apps/api/schema.sql
+make db-diff name=add_feature
+make db-apply
+```
+
+See [Database Management](../development/database.md) for full documentation.
+
 ### Core Tables
 
-```sql
--- Products (canonical)
-products (
-  id UUID PRIMARY KEY,
-  slug VARCHAR(255) UNIQUE,
-  name VARCHAR(500),
-  gtin VARCHAR(14),
-  brand_id UUID FK,
-  category_id UUID FK,
-  attributes JSONB,
-  search_vector tsvector
-)
+| Table | Purpose |
+|-------|---------|
+| `products` | Canonical product data from brand websites |
+| `variants` | Color/storage combinations with EAN |
+| `offers` | Marketplace prices per retailer |
+| `price_history` | Time-series for trends (TimescaleDB) |
+| `retailers` | Store configuration + affiliate setup |
+| `categories` | Hierarchical with JSONB attribute schema |
+| `scrape_jobs` | Job queue with retry logic |
+| `affiliate_clicks` | Revenue tracking (GDPR-compliant) |
 
--- Prices (time-series via TimescaleDB)
-prices (
-  id UUID,
-  product_id UUID FK,
-  retailer_id UUID FK,
-  price DECIMAL(10,2),
-  shipping DECIMAL(6,2),
-  in_stock BOOLEAN,
-  url TEXT,
-  scraped_at TIMESTAMPTZ  -- partitioned by this
-)
+### Key Features
 
--- Retailers
-retailers (
-  id UUID PRIMARY KEY,
-  name VARCHAR(100),
-  slug VARCHAR(100) UNIQUE,
-  scraper_config JSONB,
-  affiliate_config JSONB
-)
-
--- Categories (hierarchical)
-categories (
-  id UUID PRIMARY KEY,
-  name VARCHAR(100),
-  slug VARCHAR(100) UNIQUE,
-  parent_id UUID FK,
-  attribute_schema JSONB
-)
-
--- Clicks (affiliate tracking)
-clicks (
-  id VARCHAR(8) PRIMARY KEY,
-  product_id UUID FK,
-  retailer_id UUID FK,
-  ip_hash VARCHAR(16),
-  clicked_at TIMESTAMPTZ
-)
-```
+- **JSONB Attributes** - 40+ product specs stored flexibly
+- **GIN Indexes** - Fast JSONB and trigram search
+- **Auto-triggers** - `updated_at` managed automatically
+- **Seed Data** - Smartphones category + 6 French retailers
 
 ## API Design
 
@@ -258,15 +238,17 @@ clicks (
 
 ## Files in this Section
 
-- [Modules](./modules/) - Detailed module specifications
-  - [catalog.md](./modules/catalog.md) - Product catalog module
-  - [scraper.md](./modules/scraper.md) - Scraping module
-  - [compare.md](./modules/compare.md) - Comparison engine
-  - [affiliate.md](./modules/affiliate.md) - Affiliate tracking
-  - [frontend.md](./modules/frontend.md) - Next.js frontend
-- [ADRs](./adrs/) - Architecture Decision Records
-- [API](./api/) - API specifications
-- [Database](./database/) - Schema and migrations
+- [data-flow.md](./data-flow.md) - Complete scraping → UI data pipeline
+- [scraping-strategy.md](./scraping-strategy.md) - Brand-first scraping approach
+- [Scaling](./scaling/) - Multi-dimensional scaling strategy
+  - [README.md](./scaling/README.md) - Master scaling overview
+  - [vertical-expansion.md](./scaling/vertical-expansion.md) - Category scaling
+  - [geographic-expansion.md](./scaling/geographic-expansion.md) - Multi-country
+  - [platform-expansion.md](./scaling/platform-expansion.md) - API, B2B, white-label
+  - [infrastructure-scaling.md](./scaling/infrastructure-scaling.md) - VPS → Kubernetes
+  - [data-architecture.md](./scaling/data-architecture.md) - Multi-tenant data
+- Database schema: [`apps/api/schema.sql`](../../apps/api/schema.sql) (source of truth)
+- Database docs: [../development/database.md](../development/database.md)
 
 ---
 

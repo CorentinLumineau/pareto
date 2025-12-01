@@ -8,6 +8,7 @@
 |------|---------|
 | [README.md](./README.md) | Domain overview and concepts |
 | [pareto-optimization.md](./pareto-optimization.md) | Pareto algorithm details |
+| [quality-enforcement.md](./quality-enforcement.md) | Quality standards and enforcement |
 
 ## Key Concepts
 

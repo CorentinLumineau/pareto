@@ -218,10 +218,11 @@ make test-backend  # Go tests only
 make test-workers  # Python tests only
 make test-frontend # Jest tests only
 
-# Database
-make migrate-up    # Run migrations
-make migrate-down  # Rollback last migration
-make seed          # Seed test data
+# Database (Atlas - Prisma-like DX)
+make db-diff name=<name>  # Generate migration from schema changes
+make db-apply             # Apply pending migrations
+make db-status            # Show migration status
+make db-lint              # Lint migrations for issues
 
 # Build
 make build         # Build all containers
@@ -231,6 +232,8 @@ make build-backend # Build Go binary
 make lint          # Lint all code
 make lint-fix      # Auto-fix lint issues
 ```
+
+See [Database Management](./database.md) for the complete Atlas workflow.
 
 ## Testing
 
@@ -279,22 +282,74 @@ npm test -- --watch
 npm test -- --coverage
 ```
 
+## Quality Verification
+
+All code must pass `make verify` before merging. This runs:
+
+```bash
+make verify  # Run ALL quality checks
+```
+
+### What `make verify` checks:
+
+| Language | Checks |
+|----------|--------|
+| **Go** | golangci-lint, go test (>90% coverage), govulncheck |
+| **Python** | ruff, mypy --strict, pytest (>90% coverage), pip-audit |
+| **TypeScript** | eslint, tsc (strict mode), vitest (>90% coverage), pnpm audit |
+| **Cross-language** | jscpd (<3% duplication) |
+
+### Pre-commit Hooks
+
+Hooks are auto-installed with `make install`. To reinstall:
+
+```bash
+make hooks  # Install/reinstall pre-commit hooks
+```
+
+**Pre-commit** (on every commit):
+- Lint staged TypeScript, Python, Go files
+- Type check staged files
+- Format check (Prettier)
+
+**Pre-push** (before push):
+- Full `make verify` run
+
+**Commit message** validation:
+- Must follow [Conventional Commits](https://conventionalcommits.org/)
+
+### Quality Thresholds
+
+| Metric | Threshold | Enforcement |
+|--------|-----------|-------------|
+| Test Coverage | >90% | Hard fail |
+| Type Errors | 0 | Hard fail |
+| Lint Errors | 0 | Hard fail |
+| Cyclomatic Complexity | <10 | Hard fail |
+| Function Length | <50 lines | Hard fail |
+| Code Duplication | <3% | Hard fail |
+| Security Vulnerabilities | 0 critical/high | Hard fail |
+
+See [Quality Enforcement Initiative](../milestones/quality-enforcement/) for full details.
+
 ## Code Style
 
 ### Go
 - Use `gofmt` for formatting
 - Follow [Effective Go](https://golang.org/doc/effective_go)
-- Run `golangci-lint` before commits
+- Run `golangci-lint` before commits (configured in `.golangci.yml`)
 
 ### Python
-- Use `black` for formatting
-- Use `ruff` for linting
-- Follow PEP 8
+- Use `ruff format` for formatting
+- Use `ruff check` for linting (40+ rule categories)
+- Use `mypy --strict` for type checking
+- All config in `pyproject.toml`
 
 ### TypeScript/JavaScript
 - Use Prettier for formatting
 - Use ESLint for linting
-- Run `npm run lint` before commits
+- Strict TypeScript (all flags enabled in `packages/typescript-config/base.json`)
+- Run `pnpm lint` before commits
 
 ## Git Workflow
 
@@ -381,6 +436,7 @@ npm run dev
 ## Files in this Section
 
 - [Devcontainer Guide](./devcontainer.md) - Full containerized development (recommended)
+- [Database Management](./database.md) - Atlas migrations, schema management (Prisma-like DX)
 - [Local Setup](./local-setup.md) - Detailed setup instructions
 - [Environment Variables](./environment.md) - All env vars explained
 - [Docker Guide](./docker.md) - Container management
