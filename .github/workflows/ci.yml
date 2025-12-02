@@ -127,7 +127,7 @@ jobs:
         run: go test -v -race -coverprofile=coverage.out ./...
 
       - name: Upload Go coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: apps/api/coverage.out
           flags: go
@@ -162,7 +162,7 @@ jobs:
         run: pytest --cov=src --cov-report=xml
 
       - name: Upload Python coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: apps/workers/coverage.xml
           flags: python
